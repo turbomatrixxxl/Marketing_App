@@ -87,6 +87,39 @@ function RegisterForm() {
     }
   };
 
+  // callback FB common
+  const onFacebookResponse = (response) => {
+    console.log("FB raw response:", response);
+
+    if (!response) {
+      toast.error("Facebook returned no response");
+      return;
+    }
+
+    if (response.status === "unknown") {
+      toast.error("Facebook login failed or cancelled");
+      return;
+    }
+
+    const accessToken =
+      response.accessToken || response.authResponse?.accessToken || null;
+    const id =
+      response.id || response.userID || response.authResponse?.userID || null;
+    const name = response.name || null;
+    const email = response.email || null;
+    const avatar = response.picture?.data?.url || null;
+
+    const profile = {
+      id,
+      name,
+      email,
+      avatar,
+    };
+
+    // handleOAuthLogin trebuie să accepte accessToken ca al treilea param
+    handleOAuthLogin(profile, "facebook", accessToken);
+  };
+
   const isFormValid =
     fields.username.trim() !== "" &&
     fields.email.trim() !== "" &&
@@ -294,19 +327,8 @@ function RegisterForm() {
             appId={process.env.REACT_APP_FACEBOOK_APP_ID}
             autoLoad={false}
             fields="name,email,picture"
-            callback={(response) => {
-              if (response.status === "unknown")
-                return toast.error("Facebook login failed");
-              handleOAuthLogin(
-                {
-                  id: response.id,
-                  name: response.name,
-                  email: response.email,
-                  avatar: response.picture?.data?.url,
-                },
-                "facebook"
-              );
-            }}
+            scope="email,public_profile"
+            callback={onFacebookResponse}
           />
         </div>
       </div>

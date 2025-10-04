@@ -11,7 +11,7 @@
 }
 
 .lightCont {
-  background: var(--icon-user-plus-fill-color);
+  background: var(--Primary);
   color: var(--welcome-bg-gradient);
 }
 

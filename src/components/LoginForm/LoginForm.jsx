@@ -52,8 +52,8 @@ function LoginForm() {
     }
   };
 
-  const handleOAuthLogin = async (profile, provider) => {
-    const userPayload = { profile, provider };
+  const handleOAuthLogin = async (profile, provider, accessToken = null) => {
+    const userPayload = { profile, provider, accessToken };
     try {
       await dispatch(oAuthlLogInRegister(userPayload)).unwrap();
       toast.success("Login successful!", { position: "top-center" });
@@ -61,6 +61,39 @@ function LoginForm() {
       toast.error(`${provider} login failed`);
       console.error(err);
     }
+  };
+
+  // callback FB common
+  const onFacebookResponse = (response) => {
+    console.log("FB raw response:", response);
+
+    if (!response) {
+      toast.error("Facebook returned no response");
+      return;
+    }
+
+    if (response.status === "unknown") {
+      toast.error("Facebook login failed or cancelled");
+      return;
+    }
+
+    const accessToken =
+      response.accessToken || response.authResponse?.accessToken || null;
+    const id =
+      response.id || response.userID || response.authResponse?.userID || null;
+    const name = response.name || null;
+    const email = response.email || null;
+    const avatar = response.picture?.data?.url || null;
+
+    const profile = {
+      id,
+      name,
+      email,
+      avatar,
+    };
+
+    // handleOAuthLogin trebuie să accepte accessToken ca al treilea param
+    handleOAuthLogin(profile, "facebook", accessToken);
   };
 
   const isFormValid = fields.email.trim() !== "" && fields.password.length >= 6;
@@ -215,21 +248,8 @@ function LoginForm() {
             appId={process.env.REACT_APP_FACEBOOK_APP_ID}
             autoLoad={false}
             fields="name,email,picture"
-            callback={(response) => {
-              if (response.status === "unknown")
-                return toast.error("Facebook login failed");
-              else {
-                handleOAuthLogin(
-                  {
-                    id: response.id,
-                    name: response.name,
-                    email: response.email,
-                    avatar: response.picture?.data?.url,
-                  },
-                  "facebook"
-                );
-              }
-            }}
+            scope="email,public_profile"
+            callback={onFacebookResponse}
           />
         </div>
       </div>

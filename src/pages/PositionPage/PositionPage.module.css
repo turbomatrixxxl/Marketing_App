@@ -9,7 +9,7 @@
 }
 
 .lightCont {
-  background: var(--icon-user-plus-fill-color);
+  background: var(--gri-deschis);
   color: var(--welcome-bg-gradient);
 }
 

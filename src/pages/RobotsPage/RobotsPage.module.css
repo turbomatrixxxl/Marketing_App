@@ -11,7 +11,7 @@
 }
 
 .lightCont {
-  background: var(--gri-deschis)
+  background: var(--gri-deschis);
   color: var(--welcome-bg-gradient);
 }
 
