@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
+import { useDispatch } from "react-redux";
+import { updateTheme } from "../../redux/auth/operationsAuth";
+
 import clsx from "clsx";
 
 import { HiChevronDown, HiChevronUp } from "react-icons/hi";
@@ -8,14 +11,16 @@ import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 import styles from "./ThemeSelector.module.css";
 
 export default function ThemeSelector({ theme }) {
-  const [themeA, setTheme] = useState(theme || "dark");
+  const dispatch = useDispatch();
+
+  const [themeA, setTheme] = useState(theme || "light");
   const [isOpen, setIsOpen] = useState(false); // Controls dropdown open/close
 
   const dropdownRef = useRef(null); // Ref for dropdown to detect clicks outside
 
   const handleSelect = (selectedTheme) => {
     setTheme(selectedTheme);
-    localStorage.setItem("theme", selectedTheme); // Save theme to localStorage
+    dispatch(updateTheme(selectedTheme));
 
     setIsOpen(false); // Close the dropdown
   };
@@ -79,7 +84,7 @@ export default function ThemeSelector({ theme }) {
             themeA === "dark" ? styles.optionsDark : styles.options,
             themeA === "violet" ? styles.optionsViolet : styles.options
           )}>
-          {["light", "dark", "violet"].map((option) => (
+          {["light", "dark"].map((option) => (
             <li
               key={option}
               className={clsx(

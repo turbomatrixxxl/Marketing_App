@@ -21,11 +21,11 @@
   line-height: normal;
   letter-spacing: -0.28px;
   display: flex;
-  padding: 14px 18px;
+  padding: 10px 18px;
   align-items: center;
 
   border-radius: 8px;
-  border: 1px solid #bedbb0;
+  border: 1px solid var(--blue-brand-color);
   /* opacity: 0.8; */
   outline: none;
   background: #1f1f1f;

@@ -25,19 +25,21 @@ function Welcome() {
           <Icon>
             <use href={`${icons}#logo`} />
           </Icon>
-          <Title>GabyTrade C-Bots Platform</Title>
+          <Title>Smart Marketing Platform</Title>
         </LogoWrapper>
         <Text>
-          Automate your forex strategies with powerful C-Bots powered by Gaby.
+          Boost your business with an all-in-one marketing solution. Automate
+          campaigns, analyze results, and reach your audience faster and
+          smarter.
           <br />
           <br />
-          Trade smarter, not harder. Automate your strategies with Gaby's
-          trading robots.
+          Powered by <strong>Creative Infinity</strong>, built to give you the
+          edge over your competition.
         </Text>
 
         <AuthWrapper>
           <AuthButton to="/auth/register" className="register">
-            Registration
+            Sign Up
           </AuthButton>
           <AuthButtonLogin to="/auth/login" className="login">
             Log In

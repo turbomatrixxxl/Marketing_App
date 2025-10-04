@@ -1,6 +1,6 @@
 import React from "react";
 
-import roby from "../../../images/Roby.jpg";
+import smartImage from "../../../images/smart1Edited.jpg";
 
 import styles from "./Grafic.module.css";
 
@@ -12,7 +12,7 @@ export default function Grafic() {
         <span className={styles.chartAreaText} id="chartAreaText">
           DEMO CHART
         </span>
-        <img src={roby} alt="c-Bot Avatar" id="chartImage" />
+        <img src={smartImage} alt="c-Bot Avatar" id="chartImage" />
       </div>
     </div>
   );

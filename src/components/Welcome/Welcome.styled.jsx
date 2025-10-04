@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import styled from "@emotion/styled";
 
-import robyImage from "../../images/Roby.jpg";
+import smartImage from "../../images/smart1Edited.jpg";
 import backgroundImage from "../../images/register-background.png";
 
 export const Container = styled.div`
@@ -42,16 +42,15 @@ export const Wrapper = styled.div`
 `;
 
 export const Logo = styled.img`
-  content: url(${robyImage});
+  content: url(${smartImage});
   border-radius: 10px;
   width: 124px;
   height: 124px;
   margin-bottom: 14px;
 
   @media screen and (min-width: 768px) {
-    width: 162px;
-    height: 162px;
-    margin-bottom: 24px;
+    width: 142px;
+    height: 142px;
   }
 `;
 
@@ -109,7 +108,7 @@ export const Text = styled.p`
 
   @media screen and (min-width: 768px) {
     font-size: 16px;
-    width: 473px;
+    width: 515px;
   }
 `;
 

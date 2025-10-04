@@ -27,7 +27,7 @@
 
 .live {
   align-items: center;
-  color: var(--accent);
+  color: var(--blue-brand-color);
   display: flex;
   font-size: clamp(10px, 1.4vw, 12px); /* min, preferat, max */
   justify-content: space-between;
@@ -41,7 +41,7 @@
 }
 
 .startBtn {
-  background: var(--accent);
+  background: var(--blue-brand-color);
   color: #151b22;
   border: none;
   border-radius: 7px;

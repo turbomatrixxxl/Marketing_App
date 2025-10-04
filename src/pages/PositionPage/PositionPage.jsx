@@ -1,5 +1,6 @@
 import React from "react";
-// import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
+
 import clsx from "clsx";
 
 import Grafic from "../../components/commonComponents/Grafic";
@@ -7,7 +8,7 @@ import Grafic from "../../components/commonComponents/Grafic";
 import styles from "./PositionPage.module.css";
 
 export default function PositionPage() {
-  const theme = localStorage.getItem("theme") || "dark";
+  const {theme} = useAuth();
 
   return (
     <section

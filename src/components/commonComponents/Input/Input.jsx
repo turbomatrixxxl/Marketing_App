@@ -17,10 +17,12 @@ export default function Input({
   paddingLeft,
   autoComplete,
   handleBlur,
+  handleClick,
 }) {
   return (
     <div style={{ width: width || "auto" }} className={styles.inputContainer}>
       <input
+        onClick={handleClick}
         autoComplete={autoComplete || "off"}
         style={{ paddingLeft: paddingLeft || "0px" }}
         onChange={handleChange}
@@ -49,6 +51,7 @@ Input.propTypes = {
   type: PropTypes.string,
   variant: PropTypes.string,
   handleChange: PropTypes.func,
+  handleClick: PropTypes.func,
   required: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   placeholder: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };

@@ -2,14 +2,14 @@
 
 .button {
   align-items: center;
-  background: #bedbb0;
+  background: var(--blue-brand-color);
   border: none;
   border-radius: 8px;
   color: #161616;
   cursor: pointer;
   display: flex;
   justify-content: center;
-  padding: 14px 0px;
+  padding: 10px 0px;
   width: 100%;
 
   font-family: Poppins;

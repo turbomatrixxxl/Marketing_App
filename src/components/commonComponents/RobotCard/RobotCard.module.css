@@ -68,11 +68,11 @@
 }
 
 .selectBot:hover {
-  background: var(--accent);
+  background: var(--blue-brand-color);
 }
 
 .selectBotActive {
-  background: var(--accent);
+  background: var(--blue-brand-color);
 }
 
 .violetTh {

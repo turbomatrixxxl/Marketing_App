@@ -1,10 +1,9 @@
 .footer {
-  text-align: center;
-  padding: 12px;
+  border-top: 1px solid var(--white-60, #fff9);
   color: rgba(255, 255, 255, 0.6);
   cursor: pointer;
-  background: linear-gradient(270deg, #2e1746 3.2%, #2e225f 99.98%);
-  border-top: 1px solid var(--white-60, #fff9);
+  text-align: center;
+  padding: 12px;
   width: -webkit-fill-available;
   /* position: relative;
   z-index: 3; */
@@ -19,7 +18,8 @@
 }
 
 .light {
-  background: linear-gradient(270deg, #2e1746 3.2%, #2e225f 99.98%);
+  /* background: linear-gradient(270deg, #2e1746 3.2%, #2e225f 99.98%); */
+  background: linear-gradient(270deg, #211746 3.2%, #3d23a5 99.98%);
 }
 
 .lightText {

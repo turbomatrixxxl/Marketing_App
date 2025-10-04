@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
-// import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
-// import { useAuth } from "../../../hooks/useAuth";
-// import {
-//   refreshUser,
-//   updateUserInfo,
-//   updateUserAvatar,
-// } from "../../../redux/auth/operationsAuth";
+import {
+  refreshUser,
+  updateUserInfo,
+  updateUserAvatar,
+} from "../../../redux/auth/operationsAuth";
 import useToggle from "../../../hooks/useToggle";
 
 import clsx from "clsx";
@@ -21,13 +20,12 @@ import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import roby from "../../../images/Roby.jpg";
+// import smartImage from "../../../images/smart1Edited.jpg"
 
 import styles from "./UpdateUser.module.css";
 
 export default function UpdateUser({ onClose, user, theme }) {
-  // const { user } = useAuth();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const formRef = useRef();
   const modalRef = useRef();
@@ -57,35 +55,40 @@ export default function UpdateUser({ onClose, user, theme }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (selectedFile) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64Image = reader.result; // imaginea în format Base64
-
-        const updatedUser = {
-          username: userNewName,
-          email: userNewMail,
-          password: userNewPassword,
-          avatarBase64: base64Image,
-        };
-
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-        toast.success("User info saved locally!");
-        onClose();
-      };
-      reader.readAsDataURL(selectedFile); // conversie în Base64
-    } else {
-      const updatedUser = {
+    // Dispatch user info update
+    dispatch(
+      updateUserInfo({
         username: userNewName,
         email: userNewMail,
         password: userNewPassword,
-        avatarBase64: user?.avatarBase64 || "https://i.imgur.com/E4nHB5A.png",
-      };
+      })
+    );
 
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-      toast.success("User info saved locally!");
-      onClose();
+    // Dispatch the avatar update if a file is selected
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("avatar", selectedFile);
+
+      dispatch(updateUserAvatar(formData))
+        .then((response) => {
+          // Handle success response
+          if (response) {
+            toast.success("Avatar updated successfully!"); // Success toast
+          } else {
+            toast.error("Failed to update avatar. Please try again."); // Error toast
+          }
+        })
+        .catch((error) => {
+          // console.error("Error during avatar upload:", error.message);
+          toast.error("An error occurred. Please try again later."); // Error toast
+        });
     }
+
+    setTimeout(() => {
+      dispatch(refreshUser());
+    }, 3500);
+
+    onClose();
   };
 
   useEffect(() => {
@@ -107,12 +110,11 @@ export default function UpdateUser({ onClose, user, theme }) {
   // Set correct avatar URL
   const imageUrl = selectedFile
     ? URL.createObjectURL(selectedFile)
-    : user?.avatarBase64
-    ? user.avatarBase64
-    : user?.avatarURL && user.avatarURL.startsWith("http")
-    ? user.avatarURL
-    : roby;
-  // Default fallback image
+    : user?.avatarURL
+    ? user?.avatarURL.startsWith("http")
+      ? user?.avatarURL
+      : `http://localhost:5000/${user.avatarURL}`
+    : "/default-avatar.jpg"; // Default fallback image
 
   return (
     <div

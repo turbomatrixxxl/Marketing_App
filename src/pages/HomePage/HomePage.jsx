@@ -5,7 +5,7 @@ import Sidebar from "../../components/Sidebar";
 import SidebarRight from "../../components/SidebarRight/SidebarRight";
 import useToggle from "../../hooks/useToggle";
 import styles from "./HomePage.module.css";
-// import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import clsx from "clsx";
 
 const breakpoints = {
@@ -13,52 +13,6 @@ const breakpoints = {
   tablet: "(min-width:768px)",
   desktop: "(min-width:1115px)",
 };
-
-// export default function HomePage() {
-//   const [isSidebarVisible, toggleIsSidebarVisible] = useToggle(false); // Default to false for mobile
-//   const sideBarRef = useRef();
-//   const isDesktop = useMediaQuery({ query: breakpoints.desktop });
-//   const { user } = useAuth()
-
-//   useEffect(() => {
-//     const handleEscapeKey = (event) => {
-//       if (event.key === "Escape" && isSidebarVisible) toggleIsSidebarVisible();
-//     };
-
-//     const handleClickOutside = (event) => {
-//       if (sideBarRef.current && !sideBarRef.current.contains(event.target) && isSidebarVisible) {
-//         toggleIsSidebarVisible();
-//       }
-//     };
-
-//     document.addEventListener("keydown", handleEscapeKey);
-//     document.addEventListener("mousedown", handleClickOutside);
-
-//     return () => {
-//       document.removeEventListener("keydown", handleEscapeKey);
-//       document.removeEventListener("mousedown", handleClickOutside);
-//     };
-//   }, [isSidebarVisible, toggleIsSidebarVisible]);
-
-//   return (
-//     <section className={styles.section}>
-//       {!isDesktop && (
-//         <div
-//           className={clsx(
-//             styles.sidebarWrapper,
-//             isSidebarVisible ? styles.sidebarOpen : styles.sidebarClose,
-//             user?.theme === "dark" && styles.bgDark
-//           )}
-//         >
-//           <Sidebar sideBarRef={sideBarRef} />
-//         </div>
-//       )}
-//       {isDesktop && <Sidebar />}
-//       <SharedLayout handleClick={toggleIsSidebarVisible} />
-//     </section>
-//   );
-
-// }
 
 export default function HomePage() {
   const [isSidebarVisible, toggleIsSidebarVisible] = useToggle(false); // Default to false for mobile
@@ -68,9 +22,10 @@ export default function HomePage() {
   const sideBarRightRef = useRef();
 
   const isDesktop = useMediaQuery({ query: breakpoints.desktop });
-  // const { user } = useAuth();
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
-  const user = JSON.parse(localStorage.getItem("user")) || {};
+
+  const { user } = useAuth();
+  const theme = user?.theme || "light";
+
   const [params, setParams] = useState(null);
 
   useEffect(() => {
@@ -81,11 +36,6 @@ export default function HomePage() {
   }, []);
 
   const language = localStorage.getItem("lang") || "english";
-
-  useEffect(() => {
-    const storedTheme = localStorage.getItem("theme") || "dark";
-    setTheme(storedTheme);
-  }, []);
 
   useEffect(() => {
     const handleEscapeKey = (event) => {

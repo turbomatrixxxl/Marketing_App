@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { addUser } from "../../redux/public/chatsSlice";
 
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -10,7 +11,6 @@ import clsx from "clsx";
 import roby from "../../images/Roby.jpg";
 
 import styles from "./ConversationsPage.module.css";
-import { addUser } from "../../redux/public/chatsSlice";
 
 export default function ConversationsPage() {
   const { chatId } = useParams();

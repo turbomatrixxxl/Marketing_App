@@ -1,4 +1,5 @@
 import React from "react";
+import { useAuth } from "../../hooks/useAuth";
 
 import clsx from "clsx";
 
@@ -10,7 +11,7 @@ import rightImage from "../../images/login-background-right-side.png";
 import styles from "./BalancePage.module.css";
 
 export default function BalancePage() {
-  const theme = localStorage.getItem("theme") || "dark";
+  const {theme} = useAuth();
 
   return (
     <div

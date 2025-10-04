@@ -125,6 +125,60 @@
   transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
 }
 
+.choiceContainer {
+  align-items: center;
+  color: #fff;
+  display: flex;
+  font-size: 12px;
+  gap: 4px;
+  height: fit-content;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.line {
+  align-items: center;
+  background: #fff;
+  display: flex;
+  flex-grow: 1;
+  height: 1px;
+  width: 100%;
+}
+
+.socialButtonCont {
+  align-items: center;
+  display: flex;
+  height: fit-content;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+
+.facebookButton {
+  align-items: center;
+  background: var(--blue-brand-color) !important;
+  border: none;
+  border-radius: 6px;
+  box-shadow: 1px 9px 15px 0px rgba(0, 0, 0, 0.2);
+  display: flex !important;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  height: 40px;
+  letter-spacing: -0.28px;
+  line-height: normal;
+  text-align: center;
+  justify-content: center;
+  width: 100% !important;
+  transition: all 0.3s ease-in-out;
+}
+
+.facebookButton:hover {
+  background: #76ad5a !important;
+  color: #fff !important;
+}
+
 @media screen and (width >=345px) {
   .cont {
     width: 335px;
@@ -134,7 +188,7 @@
 @media screen and (width >=768px) {
   .cont {
     height: fit-content;
-    padding: 40px;
+    /* padding: 40px; */
     width: fit-content;
   }
 }

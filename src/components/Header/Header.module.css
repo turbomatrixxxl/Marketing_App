@@ -26,11 +26,11 @@
 }
 
 .hamButton > svg:hover {
-  fill: var(--accent);
+  fill: var(--brand-color);
 }
 
 .headerLight {
-  background: #fcfcfc;
+  background: var(--blue-brand-color);
 
   border-bottom: 1px solid var(--title-welcome-color);
 }
@@ -56,7 +56,7 @@
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  /* border: 1px solid #bedbb0; */
+  /* border: 0.5px solid var(--blue-brand-color); */
 }
 
 .rightContainer {
@@ -90,6 +90,7 @@
   cursor: pointer;
   display: flex;
   flex-wrap: wrap;
+  font-size: clamp(10px, 2vw, 12px);
   gap: 4px;
   overflow: hidden;
   text-wrap: balance;
@@ -110,20 +111,20 @@
 
 .userName:hover {
   scale: 1.1;
-  color: var(--accent);
+  color: var(--blue-brand-color);
 }
 
 .userName:hover > .cogIcon {
-  fill: var(--accent);
+  fill: var(--blue-brand-color);
 }
 
 .userNameLight:hover {
-  scale: 1.1;
-  color: var(--accent);
+  scale: 1.06;
+  color: var(--brand-color);
 }
 
 .userNameLight:hover > .cogIcon {
-  fill: var(--accent);
+  fill: var(--brand-color);
 }
 
 .image {
@@ -133,7 +134,7 @@
 }
 
 .img {
-  border: 2px solid var(--accent);
+  border: 2px solid rgba(22, 22, 22, 0.8);
 }
 
 .imgViolet {

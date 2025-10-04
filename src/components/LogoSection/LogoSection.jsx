@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 
 // import { useAuth } from "../../hooks/useAuth";
-import roby from "../../images/Roby.jpg";
+import smartImage from "../../images/smart1Edited.jpg";
 
 import clsx from "clsx";
 
@@ -71,7 +71,7 @@ const LogoSection = ({ theme, menuType }) => {
         ))}
 
       {!isDesktop && !isTablet && (
-        <img className={styles.cBotAvatar} src={roby} alt="cBot avatar" />
+        <img className={styles.cBotAvatar} src={smartImage} alt="cBot avatar" />
       )}
 
       <span
@@ -79,7 +79,7 @@ const LogoSection = ({ theme, menuType }) => {
           styles.svg,
           theme === "light" ? styles.lightSvg : styles.svg
         )}>
-        {isTablet ? menuType : "RobiForexGabyTrade"}
+        {isTablet ? menuType : "Smart Marketing App"}
       </span>
     </div>
   );

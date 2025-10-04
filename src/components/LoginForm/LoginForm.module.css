@@ -83,13 +83,27 @@
   color: red;
 }
 
+.forgotPassword {
+  border: none;
+  color: red;
+  display: flex;
+  margin-left: auto;
+  margin-top: 2px;
+  transition: all 0.35s ease-in-out;
+}
+
+.forgotPassword:hover {
+  text-decoration: underline;
+  color: var(--blue-brand-color);
+}
+
 .eyeIcon {
   cursor: pointer;
   position: absolute;
   top: 50%;
   right: 18px;
   transform: translateY(-50%);
-  color: #ffffff;
+  color: var(--brand-color);
   font-size: 24px;
   z-index: 1000;
 }
@@ -123,6 +137,60 @@
 .navLink:hover,
 .navLink:focus {
   color: white;
+}
+
+.choiceContainer {
+  align-items: center;
+  color: #fff;
+  display: flex;
+  font-size: 12px;
+  gap: 4px;
+  height: fit-content;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.line {
+  align-items: center;
+  background: #fff;
+  display: flex;
+  flex-grow: 1;
+  height: 1px;
+  width: 100%;
+}
+
+.socialButtonCont {
+  align-items: center;
+  display: flex;
+  height: fit-content;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+
+.facebookButton {
+  align-items: center;
+  background: var(--blue-brand-color) !important;
+  border: none;
+  border-radius: 6px;
+  box-shadow: 1px 9px 15px 0px rgba(0, 0, 0, 0.2);
+  display: flex !important;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  height: 40px;
+  letter-spacing: -0.28px;
+  line-height: normal;
+  text-align: center;
+  justify-content: center;
+  width: 100% !important;
+  transition: all 0.3s ease-in-out;
+}
+
+.facebookButton:hover {
+  background: #76ad5a !important;
+  color: #fff !important;
 }
 
 @media screen and (width >= 345px) {

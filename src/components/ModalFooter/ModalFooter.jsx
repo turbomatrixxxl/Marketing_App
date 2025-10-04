@@ -49,44 +49,6 @@ const ModalFooter = ({ closeModal }) => {
           <h2>RobiTrader Team:</h2>
 
           <div className={styles.footerCards}>
-            {/* Card pentru Gaby */}
-            <div
-              className={`${styles.footerTeamCard} ${animation} ${styles.Adrian}`}>
-              <img
-                src={Roby} // Folosește variabila corectă pentru imagine
-                alt="Anton Ovidiu-Gabriel"
-                className={styles.teamMemberImage}
-              />
-              <span className={styles.footerTeamName}>
-                Anton Ovidiu-Gabriel
-              </span>
-              <em className={styles.footerTeamFunction}>Project Manager</em>
-              <div className={styles.socialLinks}>
-                <a
-                  href="https://github.com/ovidiu12345678"
-                  className={styles.footerGithubIcon}
-                  aria-label="GitHub profile"
-                  target="_blank"
-                  rel="noreferrer noopener">
-                  <FaGithub />
-                </a>
-                <a
-                  href="https://www.facebook.com/anton.gabriel.7739"
-                  className={styles.footerLinkedinIcon}
-                  aria-label="LinkedIn profile"
-                  target="_blank"
-                  rel="noreferrer noopener">
-                  <FaFacebook />
-                </a>
-                <a
-                  href="tel:+40759337248"
-                  className={styles.footerPhoneIcon}
-                  aria-label="Phone">
-                  <FaPhoneAlt />
-                </a>
-              </div>
-            </div>
-
             {/* Card pentru Radu */}
             <div
               className={`${styles.footerTeamCard} ${animation} ${styles.Radu}`}>
@@ -105,7 +67,7 @@ const ModalFooter = ({ closeModal }) => {
               <span className={styles.footerTeamName}>
                 Naramzoiu Radu Bogdan
               </span>
-              <em className={styles.footerTeamFunction}>Team Leader</em>
+              <em className={styles.footerTeamFunction}>Project Manager</em>
               <div className={styles.socialLinks}>
                 <a
                   href="https://github.com/turbomatrixxxl"
@@ -125,6 +87,44 @@ const ModalFooter = ({ closeModal }) => {
                 </a>
                 <a
                   href="tel:+40771392871"
+                  className={styles.footerPhoneIcon}
+                  aria-label="Phone">
+                  <FaPhoneAlt />
+                </a>
+              </div>
+            </div>
+
+            {/* Card pentru Gaby */}
+            <div
+              className={`${styles.footerTeamCard} ${animation} ${styles.Adrian}`}>
+              <img
+                src={Roby} // Folosește variabila corectă pentru imagine
+                alt="Anton Ovidiu-Gabriel"
+                className={styles.teamMemberImage}
+              />
+              <span className={styles.footerTeamName}>
+                Anton Ovidiu-Gabriel
+              </span>
+              <em className={styles.footerTeamFunction}>Team Leader</em>
+              <div className={styles.socialLinks}>
+                <a
+                  href="https://github.com/ovidiu12345678"
+                  className={styles.footerGithubIcon}
+                  aria-label="GitHub profile"
+                  target="_blank"
+                  rel="noreferrer noopener">
+                  <FaGithub />
+                </a>
+                <a
+                  href="https://www.facebook.com/anton.gabriel.7739"
+                  className={styles.footerLinkedinIcon}
+                  aria-label="LinkedIn profile"
+                  target="_blank"
+                  rel="noreferrer noopener">
+                  <FaFacebook />
+                </a>
+                <a
+                  href="tel:+40759337248"
                   className={styles.footerPhoneIcon}
                   aria-label="Phone">
                   <FaPhoneAlt />

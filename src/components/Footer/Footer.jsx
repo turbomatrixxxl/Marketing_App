@@ -1,18 +1,17 @@
 import { useState } from "react";
 import Modal from "../ModalFooter/ModalFooter";
-// import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 
 import styles from "./Footer.module.css";
 import clsx from "clsx";
 
 const Footer = ({ style, sharedFooter }) => {
-  const [modalOpen, setModalOpen] = useState(false); // Starea pentru a ține evidența dacă modalul este deschis sau nu
-  // const { user } = useAuth();
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const theme = localStorage.getItem("theme") || "dark"; // Get theme from user or localStorage
+  const {theme} =useAuth() ; 
 
   const handleTextClick = () => {
-    setModalOpen(true); // Deschide modalul la click
+    setModalOpen(true);
   };
 
   return (
@@ -29,10 +28,10 @@ const Footer = ({ style, sharedFooter }) => {
           styles.footerText,
           theme === "light" || theme === "violet" ? styles.lightText : null
         )}>
-        <p>℗ & © RobiForexGabyTrade</p>
-        <p>Powered by RobiTrader Team</p>
+        <p>℗ & © Marketing_App</p>
+        <p>Powered by Creative Infinity Team</p>
       </div>
-      {/* Randează Modal-ul dacă este deschis */}
+     
       {modalOpen && <Modal closeModal={() => setModalOpen(false)} />}
     </footer>
   );

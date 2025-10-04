@@ -98,7 +98,7 @@
 
 .sent,
 .read {
-  color: var(--accent);
+  color: var(--blue-brand-color);
 }
 
 .timestampOutboxLight {

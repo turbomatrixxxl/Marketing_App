@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { GoogleLogin } from "@react-oauth/google";
+import FacebookLogin from "@greatsumini/react-facebook-login";
+import { jwtDecode } from "jwt-decode";
 
-// import { useDispatch } from "react-redux";
-// import { register } from "../../redux/auth/operationsAuth";
+import { useDispatch } from "react-redux";
+import { oAuthlLogInRegister, register } from "../../redux/auth/operationsAuth";
 
 import { Link } from "react-router-dom";
 
@@ -35,8 +38,8 @@ function RegisterForm() {
   const { touched, handleBlur } = useFormTouched();
   const passwordStrength = usePasswordStrength(fields.password);
 
-  // const [errorMessage, setErrorMessage] = useState("");
-  // const dispatch = useDispatch();
+  const [errorMessage, setErrorMessage] = useState("");
+  const dispatch = useDispatch();
 
   const [type, setType] = useState("password");
   const [eyeVisible, toggleEyeVisible] = useToggle(true);
@@ -52,25 +55,36 @@ function RegisterForm() {
 
     if (!validateFields()) return;
 
-    // const { passwordConfirm, ...fieldsWithoutPasswordConfirm } = fields;
+    const { passwordConfirm, ...fieldsWithoutPasswordConfirm } = fields;
 
-    // dispatch(register(fieldsWithoutPasswordConfirm))
-    //   .unwrap()
-    //   .then(() => {
-    //     setFields({
-    //       username: "",
-    //       email: "",
-    //       password: "",
-    //       passwordConfirm: "",
-    //     });
-    //     toast.success("Registration successful!");
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //     setErrorMessage("Account with this email already exists.");
-    //     toast.error("Account with this email already exists.");
-    //   });
+    dispatch(register(fieldsWithoutPasswordConfirm))
+      .unwrap()
+      .then(() => {
+        setFields({
+          username: "",
+          email: "",
+          password: "",
+          passwordConfirm: "",
+        });
+        toast.success("Registration successful!");
+      })
+      .catch((err) => {
+        console.error(err);
+        setErrorMessage("Account with this email already exists.");
+        toast.error("Account with this email already exists.");
+      });
     toast.success("Registration successful!");
+  };
+
+  const handleOAuthLogin = async (profile, provider) => {
+    const userPayload = { profile, provider };
+    try {
+      await dispatch(oAuthlLogInRegister(userPayload)).unwrap();
+      toast.success("Login successful!", { position: "top-center" });
+    } catch (err) {
+      toast.error(`${provider} login failed`);
+      console.error(err);
+    }
   };
 
   const isFormValid =
@@ -89,172 +103,213 @@ function RegisterForm() {
         </Link>
       </div>
 
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <div className={styles.inputs}>
-          <div className={styles.inputContainer}>
-            <div className={styles.inputWrapper}>
-              <Input
-                autoComplete="on"
-                paddingLeft="18px"
-                width="100%"
-                type={"text"}
-                value={fields.username}
-                handleChange={(e) => {
-                  setFields({ ...fields, username: e.target.value });
-                }}
-                handleBlur={handleBlur("username")}
-                placeholder="Name"
-                required={true}
-              />
-            </div>
-            {touched.username && !fields.username && (
-              <p className={styles.inputError}>Required</p>
-            )}
-          </div>
-
-          <div className={styles.inputContainer}>
-            <div className={styles.inputWrapper}>
-              <Input
-                autoComplete="on"
-                paddingLeft="18px"
-                width="100%"
-                type="email"
-                value={fields.email}
-                handleChange={(e) => {
-                  setFields({ ...fields, email: e.target.value });
-                }}
-                handleBlur={handleBlur("email")}
-                placeholder="E-mail"
-                required={true}
-              />
-            </div>
-            {touched.email && !fields.email && (
-              <p className={styles.inputError}>Required</p>
-            )}
-          </div>
-
-          <div className={styles.inputContainer}>
-            <div className={styles.inputWrapper}>
-              {eyeVisible && (
-                <VscEye
-                  onClick={() => {
-                    toggleEyeVisible();
-                    toggleClosedEyeVisible();
-                    setType("text");
+      <div className={styles.form}>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <div className={styles.inputs}>
+            <div className={styles.inputContainer}>
+              <div className={styles.inputWrapper}>
+                <Input
+                  autoComplete="on"
+                  paddingLeft="18px"
+                  width="100%"
+                  type={"text"}
+                  value={fields.username}
+                  handleChange={(e) => {
+                    setFields({ ...fields, username: e.target.value });
                   }}
-                  size="24px"
-                  className={styles.eyeIcon}
+                  handleBlur={handleBlur("username")}
+                  placeholder="Name"
+                  required={true}
                 />
+              </div>
+              {touched.username && !fields.username && (
+                <p className={styles.inputError}>Required</p>
               )}
-              {closedEyeVisible && (
-                <VscEyeClosed
-                  onClick={() => {
-                    toggleEyeVisible();
-                    toggleClosedEyeVisible();
-                    setType("password");
-                  }}
-                  size="24px"
-                  className={styles.eyeIcon}
-                />
-              )}
-              <Input
-                autoComplete="on"
-                paddingLeft="18px"
-                width="100%"
-                type={type}
-                value={fields.password}
-                handleChange={(e) => {
-                  setFields({ ...fields, password: e.target.value });
-                }}
-                handleBlur={handleBlur("password")}
-                placeholder="Password"
-                required={true}
-              />
             </div>
-            {touched.password && !fields.password && (
-              <p className={styles.inputError}>Required</p>
-            )}
-          </div>
-
-          <div className={styles.inputContainer}>
-            <div className={styles.inputWrapper}>
-              {confirmEyeVisible && (
-                <VscEye
-                  onClick={() => {
-                    toggleConfirmEyeVisible();
-                    toggleConfirmClosedEyeVisible();
-                    setConfirmType("text");
+            <div className={styles.inputContainer}>
+              <div className={styles.inputWrapper}>
+                <Input
+                  autoComplete="on"
+                  paddingLeft="18px"
+                  width="100%"
+                  type="email"
+                  value={fields.email}
+                  handleChange={(e) => {
+                    setFields({ ...fields, email: e.target.value });
                   }}
-                  size="24px"
-                  className={styles.eyeIcon}
+                  handleBlur={handleBlur("email")}
+                  placeholder="E-mail"
+                  required={true}
                 />
+              </div>
+              {touched.email && !fields.email && (
+                <p className={styles.inputError}>Required</p>
               )}
-              {confirmClosedEyeVisible && (
-                <VscEyeClosed
-                  onClick={() => {
-                    toggleConfirmEyeVisible();
-                    toggleConfirmClosedEyeVisible();
-                    setConfirmType("password");
-                  }}
-                  size="24px"
-                  className={styles.eyeIcon}
-                />
-              )}
-              <Input
-                autoComplete="on"
-                paddingLeft="18px"
-                width="100%"
-                type={confirmType}
-                value={fields.passwordConfirm}
-                handleChange={(e) =>
-                  setFields({ ...fields, passwordConfirm: e.target.value })
-                }
-                handleBlur={handleBlur("passwordConfirm")}
-                placeholder="Confirm Password"
-                required={true}
-              />
             </div>
-            {touched.passwordConfirm && !fields.passwordConfirm && (
-              <p className={styles.inputError}>Required</p>
-            )}
-            {touched.passwordConfirm &&
-              fields.password !== fields.passwordConfirm && (
-                <p className={styles.inputError}>Passwords must match</p>
+            <div className={styles.inputContainer}>
+              <div className={styles.inputWrapper}>
+                {eyeVisible && (
+                  <VscEye
+                    fill="var(--brand-color)"
+                    onClick={() => {
+                      toggleEyeVisible();
+                      toggleClosedEyeVisible();
+                      setType("text");
+                    }}
+                    size="24px"
+                    className={styles.eyeIcon}
+                  />
+                )}
+                {closedEyeVisible && (
+                  <VscEyeClosed
+                    fill="#4885e0"
+                    onClick={() => {
+                      toggleEyeVisible();
+                      toggleClosedEyeVisible();
+                      setType("password");
+                    }}
+                    size="24px"
+                    className={styles.eyeIcon}
+                  />
+                )}
+                <Input
+                  autoComplete="on"
+                  paddingLeft="18px"
+                  width="100%"
+                  type={type}
+                  value={fields.password}
+                  handleChange={(e) => {
+                    setFields({ ...fields, password: e.target.value });
+                  }}
+                  handleBlur={handleBlur("password")}
+                  placeholder="Password"
+                  required={true}
+                />
+              </div>
+              {touched.password && !fields.password && (
+                <p className={styles.inputError}>Required</p>
               )}
+            </div>
+            <div className={styles.inputContainer}>
+              <div className={styles.inputWrapper}>
+                {confirmEyeVisible && (
+                  <VscEye
+                    fill="var(--brand-color)"
+                    onClick={() => {
+                      toggleConfirmEyeVisible();
+                      toggleConfirmClosedEyeVisible();
+                      setConfirmType("text");
+                    }}
+                    size="24px"
+                    className={styles.eyeIcon}
+                  />
+                )}
+                {confirmClosedEyeVisible && (
+                  <VscEyeClosed
+                    fill="#4885e0"
+                    onClick={() => {
+                      toggleConfirmEyeVisible();
+                      toggleConfirmClosedEyeVisible();
+                      setConfirmType("password");
+                    }}
+                    size="24px"
+                    className={styles.eyeIcon}
+                  />
+                )}
+                <Input
+                  autoComplete="on"
+                  paddingLeft="18px"
+                  width="100%"
+                  type={confirmType}
+                  value={fields.passwordConfirm}
+                  handleChange={(e) =>
+                    setFields({ ...fields, passwordConfirm: e.target.value })
+                  }
+                  handleBlur={handleBlur("passwordConfirm")}
+                  placeholder="Confirm Password"
+                  required={true}
+                />
+              </div>
+              {touched.passwordConfirm && !fields.passwordConfirm && (
+                <p className={styles.inputError}>Required</p>
+              )}
+              {touched.passwordConfirm &&
+                fields.password !== fields.passwordConfirm && (
+                  <p className={styles.inputError}>Passwords must match</p>
+                )}
+            </div>
+            <div className={styles.passwordStrengthBar}>
+              <div
+                className={styles.passwordStrengthIndicator}
+                style={{
+                  width: `${(passwordStrength / 5) * 100}%`,
+                  backgroundColor:
+                    passwordStrength < 3
+                      ? "red"
+                      : passwordStrength < 4
+                      ? "orange"
+                      : "green",
+                }}></div>
+            </div>
           </div>
-          <div className={styles.passwordStrengthBar}>
-            <div
-              className={styles.passwordStrengthIndicator}
-              style={{
-                width: `${(passwordStrength / 5) * 100}%`,
-                backgroundColor:
-                  passwordStrength < 3
-                    ? "red"
-                    : passwordStrength < 4
-                    ? "orange"
-                    : "green",
-              }}></div>
+          <div className={styles.buttonsContainer}>
+            {errorMessage && <p className={styles.error}>{errorMessage}</p>}
+            <Button disabled={!isFormValid} variant="auth" type="submit">
+              Register Now
+            </Button>
+          </div>
+        </form>
+        <p className={styles.choiceContainer}>
+          <span className={styles.line}></span>
+          <span>or</span>
+          <span className={styles.line}></span>
+        </p>
+        <div className={styles.socialButtonCont}>
+          <div style={{ flex: 1 }}>
+            <GoogleLogin
+              onSuccess={(credentialResponse) => {
+                const profile = jwtDecode(credentialResponse.credential);
+                handleOAuthLogin(
+                  {
+                    id: profile.sub,
+                    name: profile.name,
+                    email: profile.email,
+                    avatar: profile.picture,
+                  },
+                  "google"
+                );
+              }}
+              onError={() => toast.error("Google login failed")}
+              size="large"
+              shape="rectangular"
+              theme="filled_blue"
+              width="100%" // doar ca fallback
+            />
           </div>
         </div>
-        <div className={styles.buttonsContainer}>
-          {/* {errorMessage && <p className={styles.error}>{errorMessage}</p>} */}
 
-          {/* <Button disabled={!isFormValid} variant="auth" type="submit">
-            Register Now
-          </Button> */}
-
-          <Button
-            handleClick={() => {
-              localStorage.setItem("isRegistered", "true");
-              localStorage.setItem("isLoggedin", "true");
+        <div className={styles.socialButtonCont}>
+          <FacebookLogin
+            className={styles.facebookButton}
+            appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+            autoLoad={false}
+            fields="name,email,picture"
+            callback={(response) => {
+              if (response.status === "unknown")
+                return toast.error("Facebook login failed");
+              handleOAuthLogin(
+                {
+                  id: response.id,
+                  name: response.name,
+                  email: response.email,
+                  avatar: response.picture?.data?.url,
+                },
+                "facebook"
+              );
             }}
-            disabled={!isFormValid}
-            variant="auth"
-            type="submit">
-            Register Now
-          </Button>
+          />
         </div>
-      </form>
+      </div>
     </div>
   );
 }

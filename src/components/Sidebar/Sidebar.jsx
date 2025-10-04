@@ -6,15 +6,15 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 // import { useAuth } from "../../hooks/useAuth";
 import useToggle from "../../hooks/useToggle";
-// import { logOut } from "../../redux/auth/operationsAuth";
-// import { reset } from "../../redux/auth/authSlice";
+import { logOut } from "../../redux/auth/operationsAuth";
+import { reset } from "../../redux/auth/authSlice";
 
 import clsx from "clsx";
 
 import Button from "../commonComponents/Button";
 import Modal from "../commonComponents/Modal/Modal";
 
-import roby from "../../images/Roby.jpg";
+import smartImage from "../../images/smart1Edited.jpg";
 
 import LogoSection from "../LogoSection/LogoSection";
 
@@ -25,8 +25,11 @@ import getCurrentDateTime from "../../utils/getCurrentDateTime";
 import { balance } from "../Chart/Chart";
 
 import styles from "./Sidebar.module.css";
+import { useDispatch } from "react-redux";
 
 export default function Sidebar({ sideBarRef, theme }) {
+  const dispatch = useDispatch();
+
   const [isLogoutModalVisible, toggleIsLogoutModalVisible] = useToggle(false);
   const modalRef = useRef();
 
@@ -41,8 +44,9 @@ export default function Sidebar({ sideBarRef, theme }) {
   const robots = JSON.parse(localStorage.getItem("cBots")) || [];
 
   const handleLogout = () => {
-    localStorage.removeItem("isRegistered");
-    localStorage.removeItem("isLoggedin");
+    dispatch(logOut());
+    dispatch(reset());
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -129,7 +133,11 @@ export default function Sidebar({ sideBarRef, theme }) {
                   theme === "violet" && styles.violet,
                   theme === "dark" && styles.dark
                 )}>
-                <img className={styles.logo} src={roby} alt="roby logo" />
+                <img
+                  className={styles.logo}
+                  src={smartImage}
+                  alt="smartImage logo"
+                />
                 <p
                   className={clsx(
                     styles.question,

@@ -1,71 +1,65 @@
 import React, { useState } from "react";
-// import { logIn } from "../../redux/auth/operationsAuth";
-// import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+import FacebookLogin from "@greatsumini/react-facebook-login";
+import { jwtDecode } from "jwt-decode";
+
+import { useDispatch } from "react-redux";
+import { logIn, oAuthlLogInRegister } from "../../redux/auth/operationsAuth";
+
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../commonComponents/Input/Input";
 import Button from "../commonComponents/Button";
 
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
+
 import useToggle from "../../hooks/useToggle";
 import useFormValidation from "../../hooks/useFormValidation";
 import validateLogin from "../../hooks/validateLogin";
 import useFormTouched from "../../hooks/useFormTouched";
+import { useAuth } from "../../hooks/useAuth";
 
-// import { useAuth } from "../../hooks/useAuth";
-// import clsx from "clsx";
-
-import { toast } from "react-toastify"; // Import toast and ToastContainer
-import "react-toastify/dist/ReactToastify.css"; // Import styles
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import styles from "./LoginForm.module.css";
 
 function LoginForm() {
   const { fields, setFields, validateFields } = useFormValidation(
-    {
-      email: "",
-      password: "",
-    },
+    { email: "", password: "" },
     validateLogin
   );
 
-  // const navigate = useNavigate();
-
-  // const { user, isLoggedIn } = useAuth();
-
+  const navigate = useNavigate();
+  const { user, isLoggedIn } = useAuth();
   const { touched, handleBlur } = useFormTouched(fields);
-
   const [errorMessage, setErrorMessage] = useState("");
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const [type, setType] = useState("password");
   const [eyeVisible, toggleEyeVisible] = useToggle(true);
   const [closedEyeVisible, toggleClosedEyeVisible] = useToggle(false);
+  const [forgotPassword, setForgotPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateFields()) return;
 
     try {
-      // await dispatch(logIn(fields)).unwrap();
-
-      // Show success toast message after successful login
-      toast.success("Login successful!", {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      await dispatch(logIn(fields)).unwrap();
+      toast.success("Login successful!", { position: "top-center" });
     } catch (error) {
-      setFields((prevFields) => ({
-        ...prevFields,
-        errorMessage: setErrorMessage(
-          "You have entered an invalid username or password."
-        ),
-      }));
+      setErrorMessage("You have entered an invalid username or password.");
+    }
+  };
+
+  const handleOAuthLogin = async (profile, provider) => {
+    const userPayload = { profile, provider };
+    try {
+      await dispatch(oAuthlLogInRegister(userPayload)).unwrap();
+      toast.success("Login successful!", { position: "top-center" });
+    } catch (err) {
+      toast.error(`${provider} login failed`);
+      console.error(err);
     }
   };
 
@@ -77,112 +71,168 @@ function LoginForm() {
         <Link to="/auth/register" className={styles.navLinkTitle}>
           Registration
         </Link>
-
         <p className={styles.login}>Log In</p>
       </div>
 
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.inputsCont}>
-          <div className={styles.inputContainer}>
-            <div className={styles.inputWrapper}>
-              <Input
-                className={styles.input}
-                autoComplete="on"
-                paddingLeft="18px"
-                width="100%"
-                type="email"
-                value={fields.email}
-                handleChange={(e) => {
-                  setFields({ ...fields, email: e.target.value });
-                }}
-                handleBlur={handleBlur("email")}
-                placeholder="Enter your email"
-                required={true}
-              />
+      <div className={styles.form}>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.inputsCont}>
+            <div className={styles.inputContainer}>
+              <div className={styles.inputWrapper}>
+                <Input
+                  className={styles.input}
+                  autoComplete="on"
+                  paddingLeft="18px"
+                  width="100%"
+                  type="email"
+                  value={fields.email}
+                  handleChange={(e) =>
+                    setFields({ ...fields, email: e.target.value })
+                  }
+                  handleBlur={handleBlur("email")}
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+              {touched.email && !fields.email && (
+                <p className={styles.inputError}>Required</p>
+              )}
             </div>
-            {touched.email && !fields.email && (
-              <p className={styles.inputError}>Required</p>
-            )}
+
+            <div className={styles.inputContainer}>
+              <div className={styles.inputWrapper}>
+                {eyeVisible && (
+                  <VscEye
+                    fill="var(--brand-color)"
+                    onClick={() => {
+                      toggleEyeVisible();
+                      toggleClosedEyeVisible();
+                      setType("text");
+                    }}
+                    size="24px"
+                    className={styles.eyeIcon}
+                  />
+                )}
+                {closedEyeVisible && (
+                  <VscEyeClosed
+                    fill="#4885e0"
+                    onClick={() => {
+                      toggleEyeVisible();
+                      toggleClosedEyeVisible();
+                      setType("password");
+                    }}
+                    size="24px"
+                    className={styles.eyeIcon}
+                  />
+                )}
+                <Input
+                  autoComplete="on"
+                  paddingLeft="14px"
+                  width="100%"
+                  type={type}
+                  value={fields.password}
+                  handleChange={(e) =>
+                    setFields({ ...fields, password: e.target.value })
+                  }
+                  handleBlur={() => {
+                    handleBlur("password");
+                    setForgotPassword(false);
+                  }}
+                  handleClick={() => setForgotPassword(true)}
+                  placeholder="Password"
+                  required
+                />
+              </div>
+
+              {forgotPassword && (
+                <button className={styles.forgotPassword} type="button">
+                  Forgot password?
+                </button>
+              )}
+              {touched.password && fields.password.length < 6 && (
+                <p className={styles.inputError}>
+                  Password must be at least 6 characters!
+                </p>
+              )}
+            </div>
           </div>
 
-          <div className={styles.inputContainer}>
-            <div className={styles.inputWrapper}>
-              {eyeVisible && (
-                <VscEye
-                  onClick={() => {
-                    toggleEyeVisible();
-                    toggleClosedEyeVisible();
-                    setType("text");
-                    // console.log("click");
-                  }}
-                  size="24px"
-                  className={styles.eyeIcon}
-                />
-              )}
-              {closedEyeVisible && (
-                <VscEyeClosed
-                  onClick={() => {
-                    toggleEyeVisible();
-                    toggleClosedEyeVisible();
-                    setType("password");
-                  }}
-                  size="24px"
-                  className={styles.eyeIcon}
-                />
-              )}
-              <Input
-                autoComplete="on"
-                paddingLeft="14px"
-                width="100%"
-                type={type}
-                value={fields.password}
-                handleChange={(e) => {
-                  setFields({ ...fields, password: e.target.value });
-                }}
-                handleBlur={handleBlur("password")}
-                placeholder="Password"
-                required={true}
-              />
-            </div>
-            {touched.password && fields.password.length < 6 && (
-              <p className={styles.inputError}>
-                Password must be at least 6 characters!
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className={styles.buttonsContainer}>
-          {errorMessage && <p className={styles.error}>{errorMessage}</p>}
-
-          <Button
-            handleClick={() => {
-              localStorage.setItem("isLoggedin", "true");
-            }}
-            disabled={!isFormValid}
-            variant="auth"
-            type="submit">
-            Login
-          </Button>
-        </div>
-
-        {/* {user !== null && !isLoggedIn && (
-          <div className={styles.errorCont}>
-            <p className={styles.error}>
-              It seems that your authorisation token expired for security resons
-              or your email is not verified! Please click Login button or Verify
-              button if email not verified !
-            </p>
-            <Button
-              variant="auth"
-              handleClick={() => {
-                navigate("/verify-email");
-              }}>
-              Verify
+          <div className={styles.buttonsContainer}>
+            {errorMessage && <p className={styles.error}>{errorMessage}</p>}
+            <Button disabled={!isFormValid} variant="auth" type="submit">
+              Login
             </Button>
           </div>
-        )} */}
-      </form>
+
+          {((user !== null && !isLoggedIn) || user?.verify === false) && (
+            <div className={styles.errorCont}>
+              <p className={styles.error}>
+                It seems that your authorisation token expired or your email is
+                not verified! Please click Login or Verify.
+              </p>
+              <Button
+                variant="auth"
+                handleClick={() => navigate("/verify-email")}>
+                Verify
+              </Button>
+            </div>
+          )}
+        </form>
+
+        <p className={styles.choiceContainer}>
+          <span className={styles.line}></span>
+          <span>or</span>
+          <span className={styles.line}></span>
+        </p>
+
+        <div className={styles.socialButtonCont}>
+          <div style={{ flex: 1 }}>
+            <GoogleLogin
+              onSuccess={(credentialResponse) => {
+                const profile = jwtDecode(credentialResponse.credential);
+                handleOAuthLogin(
+                  {
+                    id: profile.sub,
+                    name: profile.name,
+                    email: profile.email,
+                    avatar: profile.picture,
+                  },
+                  "google"
+                );
+              }}
+              onError={() => toast.error("Google login failed")}
+              size="large"
+              shape="rectangular"
+              theme="filled_blue"
+              width="100%" // doar ca fallback
+            />
+          </div>
+        </div>
+
+        <div className={styles.socialButtonCont}>
+          <FacebookLogin
+            className={styles.facebookButton}
+            appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+            autoLoad={false}
+            fields="name,email,picture"
+            callback={(response) => {
+              if (response.status === "unknown")
+                return toast.error("Facebook login failed");
+              else {
+                handleOAuthLogin(
+                  {
+                    id: response.id,
+                    name: response.name,
+                    email: response.email,
+                    avatar: response.picture?.data?.url,
+                  },
+                  "facebook"
+                );
+              }
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }

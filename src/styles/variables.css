@@ -72,6 +72,8 @@ button {
 
 /* Variables */
 :root {
+  --green-brand-color:#2fcf61;
+  --blue-brand-color: #4885e0;
   --label-radio-bg-color: #8fa1d0;
   --label-radio-color: #8fa1d0;
 

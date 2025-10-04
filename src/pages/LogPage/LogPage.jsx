@@ -1,4 +1,5 @@
 import React from "react";
+import { useAuth } from "../../hooks/useAuth";
 
 import clsx from "clsx";
 
@@ -7,7 +8,8 @@ import Grafic from "../../components/commonComponents/Grafic";
 import styles from "./LogPage.module.css";
 
 export default function LogPage() {
-  const theme = localStorage.getItem("theme") || "dark";
+  const {theme} = useAuth();
+
   const cBots = localStorage.getItem("cBots")
     ? JSON.parse(localStorage.getItem("cBots"))
     : [];

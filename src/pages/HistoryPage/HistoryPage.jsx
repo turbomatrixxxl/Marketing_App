@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
-import clsx from "clsx";
+import { useAuth } from "../../hooks/useAuth";
+
 import Grafic from "../../components/commonComponents/Grafic";
+
+import clsx from "clsx";
+
 import styles from "./HistoryPage.module.css";
 
 const historyData = [
@@ -51,7 +55,7 @@ const historyData = [
 ];
 
 export default function HistoryPage() {
-  const theme = localStorage.getItem("theme") || "dark";
+  const {theme} = useAuth();
 
   const [filterSymbol, setFilterSymbol] = useState("");
   const [filterMonth, setFilterMonth] = useState("");

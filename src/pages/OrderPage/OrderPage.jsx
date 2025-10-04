@@ -1,4 +1,5 @@
 import React from "react";
+import { useAuth } from "../../hooks/useAuth";
 
 import clsx from "clsx";
 
@@ -7,7 +8,7 @@ import Grafic from "../../components/commonComponents/Grafic";
 import styles from "./OrderPage.module.css";
 
 export default function OrderPage() {
-  const theme = localStorage.getItem("theme") || "dark";
+  const {theme} = useAuth();
 
   return (
     <section

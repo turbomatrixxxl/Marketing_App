@@ -35,116 +35,15 @@ import clsx from "clsx";
 
 import styles from "./SharedLayout.module.css";
 
-// function SharedLayout({ handleClick }) {
-//   const {
-//     isLoggedIn,
-//     isLoggedOut,
-//     errorAuth,
-//     isRegistered,
-//     user,
-//     emailResendStatus,
-//   } = useAuth();
-//   const { privateError, privateMessage } = usePrivate();
-//   const { helpError, helpSuccessMessage } = usePublic();
 
-//   const dispatch = useDispatch();
 
-//   const [logoutShown, setLogoutShown] = useState(false);
-
-//   useEffect(() => {
-//     if (isRegistered) {
-//       toast.success("Registration successful!");
-
-//       dispatch(clearIsRegistered());
-//     }
-
-//     if (!logoutShown) {
-//       if (isLoggedOut) {
-//         toast.success("Logout successful!");
-//         setLogoutShown(true);
-//         dispatch(reset());
-//       }
-//     }
-
-//     if (helpSuccessMessage) {
-//       toast.success(helpSuccessMessage);
-//     }
-
-//     if (emailResendStatus) {
-//       toast.success(emailResendStatus);
-
-//       dispatch(clearUpdateUser());
-//     }
-
-//     if (helpError) {
-//       toast.success(helpError);
-//       dispatch(resetHelpForm());
-//     }
-
-//     if (errorAuth) {
-//       toast.error(errorAuth);
-//     }
-
-//     if (privateError) {
-//       toast.error(privateError);
-//     }
-
-//     if (privateMessage) {
-//       toast.success(privateMessage);
-//     }
-
-//     setTimeout(() => {
-//       dispatch(resetHelpForm());
-//     }, 7000);
-
-//     setTimeout(() => {
-//       dispatch(clearUser());
-//     }, 5000);
-//   }, [
-//     isRegistered,
-//     isLoggedIn,
-//     isLoggedOut,
-//     emailResendStatus,
-//     logoutShown,
-//     helpSuccessMessage,
-//     helpError,
-//     errorAuth,
-//     privateError,
-//     privateMessage,
-//     dispatch,
-//   ]);
-
-//   return (
-//     <div className={styles.cont}>
-//       <Header handleClick={handleClick} />
-
-//       <main
-//         className={clsx(
-//           styles.main,
-//           user?.theme === "dark"
-//             ? styles.mainDark
-//             : user?.theme === "violet"
-//             ? styles.mainViolet
-//             : user?.theme === "light"
-//             ? styles.mainLight
-//             : styles.mainLight
-//         )}>
-//         <Outlet />
-//       </main>
-
-//       <Footer />
-//     </div>
-//   );
-// }
-
-function SharedLayout({ handleClick, handleRightClick, user, theme, lang }) {
+function SharedLayout({ handleClick, handleRightClick, theme, lang }) {
   return (
     <div className={styles.cont}>
       <Header
         handleClick={handleClick}
         handleRightClick={handleRightClick}
         theme={theme}
-        user={user}
         lang={lang}
       />
 
@@ -170,8 +69,7 @@ function SharedLayout({ handleClick, handleRightClick, user, theme, lang }) {
 SharedLayout.propTypes = {
   handleClick: PropTypes.func,
   handleRightClick: PropTypes.func,
-  user: PropTypes.object,
-  theme: PropTypes.oneOf(["light", "dark", "violet"]), // Theme options
+  theme: PropTypes.oneOf(["light", "dark"]), // Theme options
   lang: PropTypes.string, // Language option
 };
 

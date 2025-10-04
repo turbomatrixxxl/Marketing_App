@@ -7,11 +7,13 @@ import {
   resendVerificationEmail,
   updateUserInfo,
   updateUserAvatar,
+  updateTheme,
+  oAuthlLogInRegister,
+  refreshAccesToken,
 } from "./operationsAuth";
 
 const initialState = {
   user: null,
-  token: null,
   avatarURL: null, // Add avatar URL here
   isLoading: false,
   isLoggedIn: false,
@@ -20,7 +22,6 @@ const initialState = {
   error: null,
   emailResendStatus: null,
   isLoggedOut: null,
-  projects: [], // List of projects, each containing columns, each containing tasks
 };
 
 const handlePending = (state) => {
@@ -28,7 +29,6 @@ const handlePending = (state) => {
   state.error = null;
   if (!state.isLoggedIn) {
     state.user = null;
-    state.token = null;
   }
   state.isRefreshing = false;
 };
@@ -38,7 +38,6 @@ const handleRejected = (state, action) => {
   state.error = action.payload;
   if (!state.isRefreshing) {
     state.user = null;
-    state.token = null;
     state.isLoggedIn = false;
   }
   state.isRefreshing = false;
@@ -64,11 +63,9 @@ const authSlice = createSlice({
       // Log In
       .addCase(logIn.pending, handlePending)
       .addCase(logIn.fulfilled, (state, { payload }) => {
-        state.user = payload.user;
-        state.token = payload.token;
-        state.avatarURL = payload.user.avatarURL || null; // Set the avatar URL
-        state.projects = payload.user.projects || []; // Populate projects
-        state.isLoggedIn = payload.user.verify ? true : false;
+        state.user = payload;
+        state.avatarURL = payload.avatarURL || null;
+        state.isLoggedIn = payload.verify ? true : false;
         state.isLoading = false;
         state.error = null;
         state.isLoggedOut = false;
@@ -79,10 +76,9 @@ const authSlice = createSlice({
       // Register
       .addCase(register.pending, handlePending)
       .addCase(register.fulfilled, (state, { payload }) => {
-        state.user = payload.user;
-        state.token = payload.token;
-        state.avatarURL = payload.user.avatarURL || null; // Set the avatar URL
-        state.isLoggedIn = payload.user.verify ? true : false;
+        state.user = payload;
+        state.avatarURL = payload.avatarURL || null;
+        state.isLoggedIn = payload.verify ? true : false;
         state.isRegistered = true;
         state.isLoading = false;
         state.error = null;
@@ -93,12 +89,10 @@ const authSlice = createSlice({
       .addCase(logOut.pending, handlePending)
       .addCase(logOut.fulfilled, (state) => {
         state.user = null;
-        state.token = null;
         state.avatarURL = null; // Clear avatar URL
         state.isLoggedIn = false;
         state.isLoading = false;
         state.error = null;
-        state.projects = [];
         state.isLoggedOut = true;
       })
       .addCase(logOut.rejected, handleRejected)
@@ -109,11 +103,9 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(refreshUser.fulfilled, (state, { payload }) => {
-        state.user = payload.data;
-        state.token = payload.token;
-        state.avatarURL = payload.data.avatarURL || null; // Set the avatar URL
-        state.projects = payload.data.projects || []; // Populate projects
-        state.isLoggedIn = payload.data.verify ? true : false;
+        state.user = payload;
+        state.avatarURL = payload.avatarURL || null;
+        state.isLoggedIn = payload.verify ? true : false;
         state.isRefreshing = false;
         state.isLoggedOut = false;
       })
@@ -139,9 +131,8 @@ const authSlice = createSlice({
       // Update User Info
       .addCase(updateUserInfo.pending, handlePending)
       .addCase(updateUserInfo.fulfilled, (state, { payload }) => {
-        state.user = payload?.data?.user;
-        state.avatarURL = payload?.data?.user?.avatarURL || null; // Set the avatar URL
-        state.projects = payload?.data?.user?.projects || []; // Populate projects
+        state.user = payload;
+        state.avatarURL = payload.avatarURL || null;
         state.isLoading = false;
         state.error = null;
         state.isLoggedOut = false;
@@ -159,14 +150,67 @@ const authSlice = createSlice({
       })
       .addCase(updateUserAvatar.fulfilled, (state, { payload }) => {
         // console.log("Avatar payload :", payload);
-
-        state.avatarURL = payload.avatarUrl; // Set the new avatar URL
+        state.user = payload;
+        state.avatarURL = payload.avatarURL; // Set the new avatar URL
         state.isLoading = false;
         state.error = null;
         state.isLoggedOut = false;
       })
       // Update User Avatar Rejected
       .addCase(updateUserAvatar.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+
+      // Update Theme
+      .addCase(updateTheme.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateTheme.fulfilled, (state, { payload }) => {
+        state.user = payload;
+        state.avatarURL = payload.avatarURL || null;
+        state.isLoading = false;
+        state.error = null;
+        state.isLoggedOut = false;
+      })
+      .addCase(updateTheme.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+
+      // OAuth login/registration
+      .addCase(oAuthlLogInRegister.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(oAuthlLogInRegister.fulfilled, (state, { payload }) => {
+        state.user = payload;
+        state.avatarURL = payload.avatarURL || null;
+        state.isLoggedIn = payload.verify ? true : false;
+        state.isRegistered = true;
+        state.isLoading = false;
+        state.error = null;
+        state.isLoggedOut = false;
+      })
+      .addCase(oAuthlLogInRegister.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+
+      // Refresh acces token
+      .addCase(refreshAccesToken.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(refreshAccesToken.fulfilled, (state, { payload }) => {
+        state.user = payload;
+        state.avatarURL = payload.avatarURL || null;
+        state.isLoading = false;
+        state.error = null;
+        state.isLoggedOut = false;
+      })
+      .addCase(refreshAccesToken.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });

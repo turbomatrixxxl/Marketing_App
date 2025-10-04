@@ -18,6 +18,7 @@ import ensureIds from "./utils/ensureIds";
 
 import "./styles/theme.css";
 import "./App.css";
+import { refreshAccesToken, refreshUser } from "./redux/auth/operationsAuth";
 
 // Lazy-loaded components
 const LazyWelcomePage = lazy(() => import("./components/Welcome/Welcome"));
@@ -53,6 +54,20 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchData());
+  }, [dispatch]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) dispatch(refreshUser());
+  }, [dispatch]);
+
+  useEffect(() => {
+    // Refresh token la fiecare 14 minute
+    const interval = setInterval(() => {
+      dispatch(refreshAccesToken());
+    }, 14 * 60 * 1000);
+
+    return () => clearInterval(interval); // curăță la demontare
   }, [dispatch]);
 
   const robots = [

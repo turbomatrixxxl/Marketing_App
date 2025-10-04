@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../../hooks/useAuth";
+
 import clsx from "clsx";
+
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+
 import RobotCard from "../../components/commonComponents/RobotCard";
+
 import styles from "./RobotsPage.module.css";
 
 export default function RobotsPage() {
   const [isSelectedId, setIsSelectedId] = useState(null);
-  const theme = localStorage.getItem("theme") || "dark";
+
+  const {theme} = useAuth();
+
   const user = JSON.parse(localStorage.getItem("user"));
 
   const [robots, setRobots] = useState(() => {

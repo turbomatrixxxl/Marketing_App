@@ -28,5 +28,5 @@
 
 ::-webkit-scrollbar-thumb:hover {
   cursor: pointer;
-  background-color: var(--accent);
+  background-color: var(--blue-brand-color);
 }

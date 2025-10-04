@@ -68,7 +68,7 @@
 
 .imgCont {
   align-items: center;
-  border: 2px solid var(--accent);
+  border: 2px solid var(--blue-brand-color);
   border-radius: 50%;
   display: flex;
   justify-content: center;

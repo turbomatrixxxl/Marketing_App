@@ -72,12 +72,12 @@
 }
 .menuBtn.activeBtn {
   background: var(--tab-activ);
-  color: var(--accent);
+  color: var(--blue-brand-color);
 }
 
 .menuBtn:hover {
   background: var(--tab-activ);
-  color: var(--accent);
+  color: var(--blue-brand-color);
 }
 
 .lightMenuBtn {
@@ -87,12 +87,12 @@
 
 .lightMenuBtn:hover {
   background: var(--tab-activ);
-  color: var(--accent);
+  color: var(--blue-brand-color);
 }
 
 .lightActiveMenuBtn {
   background: var(--tab-activ);
-  color: var(--accent);
+  color: var(--blue-brand-color);
 }
 
 .info {
@@ -128,7 +128,7 @@
   background: var(--gri);
   border: none;
   border-radius: var(--radius-mic);
-  color: var(--accent);
+  color: var(--blue-brand-color);
   display: flex;
   font-size: 14px;
   justify-content: center;
@@ -283,6 +283,6 @@
   }
 
   .asideDark {
-    border-right: 1px solid var(--icon-user-plus-fill-color);
+    border-right: 1px solid var(--gri-deschis);
   }
 }

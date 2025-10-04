@@ -31,7 +31,7 @@
 }
 
 .button:hover {
-  outline: solid 1px var(--accent);
+  outline: solid 1px var(--blue-brand-color);
 }
 
 .span {
@@ -57,8 +57,8 @@
 
 .button:hover .svg,
 .button:hover .span {
-  color: var(--accent);
-  fill: var(--accent);
+  color: var(--blue-brand-color);
+  fill: var(--blue-brand-color);
 }
 
 .svgDark {

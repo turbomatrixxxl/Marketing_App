@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { useMediaQuery } from "react-responsive";
 
-// import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 
 import clsx from "clsx";
 
@@ -14,7 +14,7 @@ import LanguageSelector from "../LanguageSelector/LanguageSelector";
 
 import UpdateUser from "../modal/UpdateUser/UpdateUser";
 
-import roby from "../../images/Roby.jpg";
+import smartImage from "../../images/smart1Edited.jpg";
 
 import styles from "./Header.module.css";
 
@@ -24,8 +24,8 @@ const breakpoints = {
   desktop: "(min-width:1115px)",
 };
 
-function Header({ handleClick, handleRightClick, theme, user, lang }) {
-  // const { user } = useAuth();
+function Header({ handleClick, handleRightClick, theme, lang }) {
+  const { user, avatarURL } = useAuth();
 
   const [isUpdateUserModalVisible, setIsUpdateUserModalVisible] =
     useState(false);
@@ -41,6 +41,10 @@ function Header({ handleClick, handleRightClick, theme, user, lang }) {
   // const imageUrl = avatarURL?.startsWith("http")
   // ? avatarURL
   //   : `https://taskpro-nodejs.onrender.com/${avatarURL}`;
+
+  const imageUrl = avatarURL?.startsWith("http")
+    ? avatarURL
+    : `http://localhost:5000/${avatarURL}`;
 
   const isMobile = useMediaQuery({ query: breakpoints.mobile });
   const isTablet = useMediaQuery({ query: breakpoints.tablet });
@@ -82,7 +86,7 @@ function Header({ handleClick, handleRightClick, theme, user, lang }) {
                 d="M3 12H21"
                 stroke={
                   hover
-                    ? "#37e673"
+                    ? "var(--brand-color)"
                     : clsx(
                         theme === "dark" || theme === "violet"
                           ? "rgba(255, 255, 255, 0.8)"
@@ -97,7 +101,7 @@ function Header({ handleClick, handleRightClick, theme, user, lang }) {
                 d="M3 6H21"
                 stroke={
                   hover
-                    ? "#37e673"
+                    ? "var(--brand-color)"
                     : clsx(
                         theme === "dark" || theme === "violet"
                           ? "rgba(255, 255, 255, 0.8)"
@@ -112,7 +116,7 @@ function Header({ handleClick, handleRightClick, theme, user, lang }) {
                 d="M3 18H21"
                 stroke={
                   hover
-                    ? "#37e673"
+                    ? "var(--brand-color)"
                     : clsx(
                         theme === "dark" || theme === "violet"
                           ? "rgba(255, 255, 255, 0.8)"
@@ -141,7 +145,7 @@ function Header({ handleClick, handleRightClick, theme, user, lang }) {
                 d="M4 16H28"
                 stroke={
                   hover
-                    ? "#37e673"
+                    ? "var(--brand-color)"
                     : clsx(
                         theme === "dark" || theme === "violet"
                           ? "rgba(255, 255, 255, 0.8)"
@@ -156,7 +160,7 @@ function Header({ handleClick, handleRightClick, theme, user, lang }) {
                 d="M4 8H28"
                 stroke={
                   hover
-                    ? "#37e673"
+                    ? "var(--brand-color)"
                     : clsx(
                         theme === "dark" || theme === "violet"
                           ? "rgba(255, 255, 255, 0.8)"
@@ -171,7 +175,7 @@ function Header({ handleClick, handleRightClick, theme, user, lang }) {
                 d="M4 24H28"
                 stroke={
                   hover
-                    ? "#37e673"
+                    ? "var(--brand-color)"
                     : clsx(
                         theme === "dark" || theme === "violet"
                           ? "rgba(255, 255, 255, 0.8)"
@@ -191,7 +195,11 @@ function Header({ handleClick, handleRightClick, theme, user, lang }) {
 
         {isTablet && (
           <div className={styles.logoSection}>
-            <img className={styles.cBotAvatar} src={roby} alt="cBot avatar" />
+            <img
+              className={styles.cBotAvatar}
+              src={smartImage}
+              alt="cBot avatar"
+            />
             <p
               style={{ fontSize: "16px", fontWeight: "bold" }}
               className={
@@ -199,7 +207,7 @@ function Header({ handleClick, handleRightClick, theme, user, lang }) {
                   ? styles.userName
                   : styles.userNameLight
               }>
-              RobiForexGabyTrade
+              Smart Marketing
             </p>
           </div>
         )}
@@ -234,7 +242,7 @@ function Header({ handleClick, handleRightClick, theme, user, lang }) {
                 styles.image,
                 theme === "violet" ? styles.imgViolet : styles.img
               )}
-              src={user?.avatarBase64 || roby}
+              src={imageUrl || smartImage}
               alt="User Avatar"
               // style={{ width: "42px", height: "42px", borderRadius: "50%" }}
             />
@@ -276,11 +284,7 @@ function Header({ handleClick, handleRightClick, theme, user, lang }) {
 Header.propTypes = {
   handleClick: PropTypes.func,
   handleRightClick: PropTypes.func,
-  theme: PropTypes.oneOf(["light", "dark", "violet"]), // Theme options
-  user: PropTypes.shape({
-    username: PropTypes.string,
-    imageUrl: PropTypes.string,
-  }),
+  theme: PropTypes.oneOf(["light", "dark"]), // Theme options
 };
 
 export default Header;
