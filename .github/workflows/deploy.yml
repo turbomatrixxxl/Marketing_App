@@ -1,5 +1,7 @@
 name: Deploy to GitHub Pages
 
+# trigger detection
+
 on:
   push:
     branches: [main]
