@@ -49,6 +49,7 @@
 .button:hover .svg {
   color: var(--brand-color);
   fill: var(--brand-color);
+  /* color: #5255bc; */
 }
 
 .svgDark {
