@@ -2,8 +2,8 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main # schimbă dacă folosești master/alt branch
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
