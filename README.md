@@ -123,3 +123,4 @@ Frontend-ul va fi responsabil pentru:
 ---
 
 Aceasta este structura completă și actualizată a aplicației, pregătită pentru implementare și extindere, inclusiv **backend Node.Js C#**, **rețele neuronale pentru analiza campaniilor**, **refresh token/session**, **autentificare socială Google/Facebook** și **funcții vocale**.
+# trigger GH Pages workflow
