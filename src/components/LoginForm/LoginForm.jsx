@@ -219,7 +219,7 @@ function LoginForm() {
         </p>
 
         <div className={styles.socialButtonCont}>
-          <div style={{ flex: 1 }}>
+          <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
             <GoogleLogin
               onSuccess={(credentialResponse) => {
                 const profile = jwtDecode(credentialResponse.credential);
