@@ -68,8 +68,6 @@
   transition: background 0.2s, color 0.2s;
   box-shadow: 0 2px 12px #37e67333;
 }
-/* .startBtns.oprit {
-      background: var(--rosu);
-      color: #fff;
-      box-shadow: 0 2px 12px #ea3c5350;
-    } */
+.startBtn:hover {
+  background: var(--green-brand-color);
+}

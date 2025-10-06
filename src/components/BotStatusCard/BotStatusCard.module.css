@@ -55,6 +55,10 @@
   box-shadow: 0 2px 12px #37e67333;
 }
 
+.startBtn:hover {
+  background: var(--green-brand-color);
+}
+
 .stop {
   background: var(--rosu);
   color: #fff;

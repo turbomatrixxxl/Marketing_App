@@ -219,11 +219,12 @@ function Header({ handleClick, handleRightClick, theme, lang }) {
               theme === "dark" ? styles.userContainerDark : styles.userContainer
             )}>
             <p
-              className={
+              className={clsx(
+                styles.username,
                 theme === "dark" || theme === "violet"
                   ? styles.userName
                   : styles.userNameLight
-              }
+              )}
               onClick={handleOpenUpdateModal}>
               <FaCog
                 size={14}
@@ -234,7 +235,7 @@ function Header({ handleClick, handleRightClick, theme, lang }) {
                 }
                 className={styles.cogIcon}
               />
-              {user?.username || "User"}
+              <span>{user?.username || "User"}</span>
             </p>
 
             <img

@@ -34,7 +34,7 @@
 }
 
 .asideLight {
-  background: #fff;
+  background: var(--gri-deschis);
 }
 
 .asideViolet {

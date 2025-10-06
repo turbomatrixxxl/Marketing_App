@@ -63,6 +63,8 @@
   align-items: center;
   display: flex;
   margin-left: auto;
+  /* width: -webkit-fill-available; */
+  overflow: hidden;
 }
 
 .userContainer {
@@ -78,6 +80,7 @@
   line-height: normal;
   letter-spacing: -0.28px;
   margin-left: auto;
+  width: -webkit-fill-available;
 }
 
 .userContainerDark {
@@ -95,6 +98,7 @@
   overflow: hidden;
   text-wrap: balance;
   transition: all 0.3s ease-in-out;
+  /* width: 30px; */
 }
 
 .userNameLight {
@@ -103,14 +107,28 @@
   cursor: pointer;
   display: flex;
   flex-wrap: wrap;
+  font-size: clamp(10px, 2vw, 12px);
   gap: 4px;
   overflow: hidden;
   text-wrap: balance;
   transition: all 0.3s ease-in-out;
+  /* width: 30px; */
+}
+
+/* .username {
+  flex-grow: 1;
+  text-wrap: nowrap;
+} */
+
+.username > span {
+  display: inline-block; /* permite limitarea dimensiunii */
+  max-width: 100%; /* nu depășește containerul */
+  overflow: hidden; /* ascunde textul ce iese */
+  text-overflow: ellipsis; /* adaugă "..." dacă e prea lung */
+  white-space: nowrap; /* menține textul pe o singură linie */
 }
 
 .userName:hover {
-  scale: 1.1;
   color: var(--blue-brand-color);
 }
 
@@ -119,7 +137,6 @@
 }
 
 .userNameLight:hover {
-  scale: 1.06;
   color: var(--brand-color);
 }
 
@@ -146,6 +163,11 @@
     padding: 18px 10px;
   }
 
+  /* .username {
+    width: 70px;
+    text-wrap: nowrap;
+  } */
+
   .image {
     height: 42px;
     width: 42px;
@@ -158,6 +180,10 @@
     height: 68px;
     /* padding: 18px 18px; */
   }
+
+  /* .username {
+    width: fit-content;
+  } */
 }
 
 /* @media screen and (width >=1115px) {
