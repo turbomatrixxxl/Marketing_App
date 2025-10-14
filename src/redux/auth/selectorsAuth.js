@@ -9,3 +9,4 @@ export const selectIsemailResendStatus = (state) =>
   state.authSlice.emailResendStatus;
 export const selectIsLoggedOut = (state) => state.authSlice.isLoggedOut;
 export const selectTheme = (state) => state.authSlice.user?.theme || "light";
+export const selectMessage = (state) => state.authSlice.message;

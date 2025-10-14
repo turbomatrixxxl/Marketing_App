@@ -1,4 +1,5 @@
 import React, { lazy, useEffect } from "react";
+// import Cookies from "js-cookie";
 
 import { Route, Routes } from "react-router-dom";
 
@@ -8,6 +9,7 @@ import { fetchData } from "./redux/public/operationsChats";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import RestrictedRoute from "./components/RestrictedRoute/RestrictedRoute";
 import RestrictedLoginRoute from "./components/RestrictedLoginRoute/RestrictedLoginRoute";
+import { refreshAccesToken, refreshUser } from "./redux/auth/operationsAuth";
 
 import Loader from "./components/commonComponents/Loader";
 
@@ -18,7 +20,6 @@ import ensureIds from "./utils/ensureIds";
 
 import "./styles/theme.css";
 import "./App.css";
-import { refreshAccesToken, refreshUser } from "./redux/auth/operationsAuth";
 
 // Lazy-loaded components
 const LazyWelcomePage = lazy(() => import("./components/Welcome/Welcome"));
@@ -39,6 +40,8 @@ const LazyChatPage = lazy(() => import("./pages/ChatPage"));
 const LazyBalancePage = lazy(() => import("./pages/BalancePage"));
 const LazyChatHomePage = lazy(() => import("./pages/ChatHomePage"));
 const LazyConverstionsPage = lazy(() => import("./pages/ConversationsPage"));
+const LazyForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage"));
+const LazyResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage"));
 
 function App() {
   const dispatch = useDispatch();
@@ -57,17 +60,31 @@ function App() {
   }, [dispatch]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) dispatch(refreshUser());
+    const initializeAuth = async () => {
+      try {
+        await dispatch(refreshUser()).unwrap();
+      } catch (err) {
+        try {
+          await dispatch(refreshAccesToken()).unwrap();
+          await dispatch(refreshUser()).unwrap();
+        } catch {
+          // Nu mai face logOut aici
+        }
+      }
+    };
+
+    initializeAuth();
   }, [dispatch]);
 
   useEffect(() => {
-    // Refresh token la fiecare 14 minute
-    const interval = setInterval(() => {
-      dispatch(refreshAccesToken());
+    const interval = setInterval(async () => {
+      try {
+        await dispatch(refreshAccesToken()).unwrap();
+        await dispatch(refreshUser()).unwrap();
+      } catch {}
     }, 14 * 60 * 1000);
 
-    return () => clearInterval(interval); // curăță la demontare
+    return () => clearInterval(interval);
   }, [dispatch]);
 
   const robots = [
@@ -157,6 +174,13 @@ function App() {
             }
           />
           <Route path="/verify-email" element={<LazyVerifyEmailPage />} />
+
+          <Route path="/forgot-password" element={<LazyForgotPasswordPage />} />
+
+          <Route
+            path="/reset-password/:token"
+            element={<LazyResetPasswordPage />}
+          />
 
           {/* Private Routes */}
           <Route

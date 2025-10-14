@@ -10,6 +10,7 @@ import {
   selectIsemailResendStatus,
   selectIsLoggedOut,
   selectTheme,
+  selectMessage,
 } from "../redux/auth/selectorsAuth";
 
 export const useAuth = () => {
@@ -23,6 +24,7 @@ export const useAuth = () => {
   const emailResendStatus = useSelector(selectIsemailResendStatus);
   const isLoggedOut = useSelector(selectIsLoggedOut);
   const theme = useSelector(selectTheme);
+  const message = useSelector(selectMessage);
 
   return {
     isLoggedIn,
@@ -35,5 +37,6 @@ export const useAuth = () => {
     isLoggedOut,
     avatarURL,
     theme,
+    message,
   };
 };

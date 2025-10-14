@@ -20,8 +20,12 @@ import { FaPaperclip, FaRegSmile, FaPaperPlane } from "react-icons/fa";
 import EmojiPicker from "emoji-picker-react";
 
 import styles from "./ChatPage.module.css";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function ChatPage() {
+  const { user } = useAuth();
+  const theme = user.theme || "light";
+
   const { chats } = useChats();
 
   const { chatId } = useParams();
@@ -39,7 +43,7 @@ export default function ChatPage() {
   const [showBlockMsg, setShowBlockMsg] = useState(false);
   const [showYouAreBlockMsg, setShowYouAreBlockMsg] = useState(false);
 
-  const user = chats.find((u) => u.id === chatId);
+  const userChat = chats.find((u) => u.id === chatId);
 
   const handleSendMsg = () => {
     if (!message.trim()) return;
@@ -112,8 +116,6 @@ export default function ChatPage() {
     setMessage((prev) => prev + emojiData.emoji);
   };
 
-  const theme = localStorage.getItem("theme") || "dark";
-
   return (
     <div
       className={clsx(
@@ -127,7 +129,9 @@ export default function ChatPage() {
       <ChatHeader theme={theme} />
       <div className={clsx(styles.content)}>
         <ChatsAside
-          isBlocked={user?.user?.isBlocked || user?.user?.youAreBlocked}
+          isBlocked={
+            userChat?.userChat?.isBlocked || userChat?.userChat?.youAreBlocked
+          }
           theme={theme}
         />
         <section className={styles.main}>
@@ -179,19 +183,20 @@ export default function ChatPage() {
         </ChatInput>
 
         <div ref={blockRef} className={styles.sendButtonCont}>
-          {user?.user?.isBlocked &&
-            !user?.user?.youAreBlocked &&
+          {userChat?.userChat?.isBlocked &&
+            !userChat?.userChat?.youAreBlocked &&
             showBlockMsg && (
               <p className={styles.blockSpan}>
-                🚫 You have blocked <b>{user?.user?.name} !</b> Find them in{" "}
-                <b>Chats List → Settings</b> and unblock to send messages.
+                🚫 You have blocked <b>{userChat?.userChat?.name} !</b> Find
+                them in <b>Chats List → Settings</b> and unblock to send
+                messages.
               </p>
             )}
           {chatId !== "global" &&
-            user?.user?.youAreBlocked &&
+            userChat?.userChat?.youAreBlocked &&
             showYouAreBlockMsg && (
               <p className={styles.blockSpan}>
-                🚫 You are blocked by <b>{user?.user?.name} !</b>
+                🚫 You are blocked by <b>{userChat?.userChat?.name} !</b>
                 You cannot send messages to them.
               </p>
             )}
@@ -206,18 +211,22 @@ export default function ChatPage() {
             type="button"
             className={clsx(
               styles.sendMsgButton,
-              (user?.user?.isBlocked || user?.user?.youAreBlocked) &&
+              (userChat?.userChat?.isBlocked ||
+                userChat?.userChat?.youAreBlocked) &&
                 styles.sendBlocked
             )}
             onClick={() => {
-              !user?.user?.isBlocked &&
-                !user?.user?.youAreBlocked &&
+              !userChat?.userChat?.isBlocked &&
+                !userChat?.userChat?.youAreBlocked &&
                 handleSendMsg();
-              if (user?.user?.isBlocked && !user?.user?.youAreBlocked) {
+              if (
+                userChat?.userChat?.isBlocked &&
+                !userChat?.userChat?.youAreBlocked
+              ) {
                 setShowBlockMsg(!showBlockMsg);
                 setShowYouAreBlockMsg(false);
               }
-              if (user?.user?.youAreBlocked) {
+              if (userChat?.userChat?.youAreBlocked) {
                 setShowYouAreBlockMsg(!showYouAreBlockMsg);
                 setShowBlockMsg(false);
               }

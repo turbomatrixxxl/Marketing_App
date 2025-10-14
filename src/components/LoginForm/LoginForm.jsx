@@ -48,6 +48,7 @@ function LoginForm() {
       await dispatch(logIn(fields)).unwrap();
       toast.success("Login successful!", { position: "top-center" });
     } catch (error) {
+      toast.error(error);
       setErrorMessage("You have entered an invalid username or password.");
     }
   };
@@ -96,7 +97,7 @@ function LoginForm() {
     handleOAuthLogin(profile, "facebook", accessToken);
   };
 
-  const isFormValid = fields.email.trim() !== "" && fields.password.length >= 6;
+  const isFormValid = fields.email.trim() !== "" && fields.password.length >= 8;
 
   return (
     <div className={styles.cont}>
@@ -169,7 +170,7 @@ function LoginForm() {
                   }
                   handleBlur={() => {
                     handleBlur("password");
-                    setForgotPassword(false);
+                    // setForgotPassword(false);
                   }}
                   handleClick={() => setForgotPassword(true)}
                   placeholder="Password"
@@ -178,13 +179,16 @@ function LoginForm() {
               </div>
 
               {forgotPassword && (
-                <button className={styles.forgotPassword} type="button">
+                <button
+                  onClick={() => navigate("/forgot-password")}
+                  className={styles.forgotPassword}
+                  type="button">
                   Forgot password?
                 </button>
               )}
-              {touched.password && fields.password.length < 6 && (
+              {touched.password && fields.password.length < 8 && (
                 <p className={styles.inputError}>
-                  Password must be at least 6 characters!
+                  Password must be at least 8 characters!
                 </p>
               )}
             </div>
@@ -197,7 +201,7 @@ function LoginForm() {
             </Button>
           </div>
 
-          {((user !== null && !isLoggedIn) || user?.verify === false) && (
+          {user !== null && !isLoggedIn && user?.verify === false && (
             <div className={styles.errorCont}>
               <p className={styles.error}>
                 It seems that your authorisation token expired or your email is

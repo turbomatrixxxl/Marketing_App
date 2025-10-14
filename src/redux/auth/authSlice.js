@@ -10,6 +10,8 @@ import {
   updateTheme,
   oAuthlLogInRegister,
   refreshAccesToken,
+  forgotPassword,
+  resetPassword,
 } from "./operationsAuth";
 
 const initialState = {
@@ -22,11 +24,13 @@ const initialState = {
   error: null,
   emailResendStatus: null,
   isLoggedOut: null,
+  message: null,
 };
 
 const handlePending = (state) => {
   state.isLoading = true;
   state.error = null;
+  state.message = null;
   if (!state.isLoggedIn) {
     state.user = null;
   }
@@ -36,6 +40,7 @@ const handlePending = (state) => {
 const handleRejected = (state, action) => {
   state.isLoading = false;
   state.error = action.payload;
+  state.message = null;
   if (!state.isRefreshing) {
     state.user = null;
     state.isLoggedIn = false;
@@ -70,6 +75,7 @@ const authSlice = createSlice({
         state.error = null;
         state.isLoggedOut = false;
         state.isRegistered = false;
+        state.message = null;
       })
       .addCase(logIn.rejected, handleRejected)
 
@@ -82,6 +88,7 @@ const authSlice = createSlice({
         state.isRegistered = true;
         state.isLoading = false;
         state.error = null;
+        state.message = null;
       })
       .addCase(register.rejected, handleRejected)
 
@@ -94,6 +101,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         state.isLoggedOut = true;
+        state.message = null;
       })
       .addCase(logOut.rejected, handleRejected)
 
@@ -101,6 +109,7 @@ const authSlice = createSlice({
       .addCase(refreshUser.pending, (state) => {
         state.isRefreshing = true;
         state.error = null;
+        state.message = null;
       })
       .addCase(refreshUser.fulfilled, (state, { payload }) => {
         state.user = payload;
@@ -108,17 +117,20 @@ const authSlice = createSlice({
         state.isLoggedIn = payload.verify ? true : false;
         state.isRefreshing = false;
         state.isLoggedOut = false;
+        state.message = null;
       })
       .addCase(refreshUser.rejected, (state, action) => {
         state.isRefreshing = false;
         state.isLoggedIn = false;
         state.error = action.payload;
+        state.message = null;
       })
 
       // Resend Verification Email
       .addCase(resendVerificationEmail.pending, (state) => {
         state.emailResendStatus = null;
         state.error = null;
+        state.message = null;
       })
       .addCase(resendVerificationEmail.fulfilled, (state, { payload }) => {
         state.emailResendStatus = payload;
@@ -126,6 +138,7 @@ const authSlice = createSlice({
       .addCase(resendVerificationEmail.rejected, (state, action) => {
         state.emailResendStatus = null;
         state.error = action.payload;
+        state.message = null;
       })
 
       // Update User Info
@@ -137,16 +150,19 @@ const authSlice = createSlice({
         state.error = null;
         state.isLoggedOut = false;
         state.emailResendStatus = "User updated suscesfully...!";
+        state.message = null;
       })
       .addCase(updateUserInfo.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+        state.message = null;
       })
 
       // Update User Avatar
       .addCase(updateUserAvatar.pending, (state) => {
         state.isLoading = true;
         state.error = null;
+        state.message = null;
       })
       .addCase(updateUserAvatar.fulfilled, (state, { payload }) => {
         // console.log("Avatar payload :", payload);
@@ -155,17 +171,20 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         state.isLoggedOut = false;
+        state.message = null;
       })
       // Update User Avatar Rejected
       .addCase(updateUserAvatar.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+        state.message = null;
       })
 
       // Update Theme
       .addCase(updateTheme.pending, (state) => {
         state.isLoading = true;
         state.error = null;
+        state.message = null;
       })
       .addCase(updateTheme.fulfilled, (state, { payload }) => {
         state.user = payload;
@@ -173,16 +192,19 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         state.isLoggedOut = false;
+        state.message = null;
       })
       .addCase(updateTheme.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+        state.message = null;
       })
 
       // OAuth login/registration
       .addCase(oAuthlLogInRegister.pending, (state) => {
         state.isLoading = true;
         state.error = null;
+        state.message = null;
       })
       .addCase(oAuthlLogInRegister.fulfilled, (state, { payload }) => {
         state.user = payload;
@@ -192,16 +214,19 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         state.isLoggedOut = false;
+        state.message = null;
       })
       .addCase(oAuthlLogInRegister.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+        state.message = null;
       })
 
       // Refresh acces token
       .addCase(refreshAccesToken.pending, (state) => {
         state.isLoading = true;
         state.error = null;
+        state.message = null;
       })
       .addCase(refreshAccesToken.fulfilled, (state, { payload }) => {
         state.user = payload;
@@ -209,10 +234,52 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         state.isLoggedOut = false;
+        state.message = null;
       })
       .addCase(refreshAccesToken.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+        state.message = null;
+      })
+
+      // Forgot Password
+      .addCase(forgotPassword.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+        state.message = null;
+      })
+      .addCase(forgotPassword.fulfilled, (state, { payload }) => {
+        state.message = payload;
+        state.isLoading = false;
+        state.error = null;
+        state.isLoggedOut = false;
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+        state.message = null;
+      })
+
+      // Reset Password
+      .addCase(resetPassword.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+        state.message = null;
+      })
+      .addCase(resetPassword.fulfilled, (state, { payload }) => {
+        state.user = payload.user;
+        state.message = payload.message;
+        state.avatarURL = payload.avatarURL || null;
+        state.isLoading = false;
+        state.error = null;
+
+        state.isLoggedIn = false;
+        state.isLoggedOut = true;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+        state.message = null;
       });
   },
 });

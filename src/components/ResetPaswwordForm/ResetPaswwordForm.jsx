@@ -1,12 +1,9 @@
-import React, { useState } from "react";
-import { GoogleLogin } from "@react-oauth/google";
-import FacebookLogin from "@greatsumini/react-facebook-login";
-import { jwtDecode } from "jwt-decode";
+import React, { useEffect, useState } from "react";
 
 import { useDispatch } from "react-redux";
-import { oAuthlLogInRegister, register } from "../../redux/auth/operationsAuth";
+import { resetPassword } from "../../redux/auth/operationsAuth";
 
-import { Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import Input from "../commonComponents/Input/Input";
 import Button from "../commonComponents/Button";
@@ -18,21 +15,28 @@ import { VscEye, VscEyeClosed } from "react-icons/vsc";
 
 import useToggle from "../../hooks/useToggle";
 import useFormValidation from "../../hooks/useFormValidation";
-import validateRegister from "../../hooks/validateRegister";
+import validateNewPassword from "../../hooks/validateNewPassword";
 import useFormTouched from "../../hooks/useFormTouched";
 import usePasswordStrength from "../../hooks/usePasswordStrength";
 
-import styles from "./RegisterForm.module.css";
+import styles from "./ResetPaswwordForm.module.css";
 
-function RegisterForm() {
+function ResetPasswordForm() {
+  const navigate = useNavigate();
+
+  const { token } = useParams();
+
+  useEffect(() => {
+    console.log("Token from URL:", token);
+    // Poți valida tokenul aici sau face fetch către backend
+  }, [token]);
+
   const { fields, setFields, validateFields } = useFormValidation(
     {
-      username: "",
-      email: "",
       password: "",
       passwordConfirm: "",
     },
-    validateRegister
+    validateNewPassword
   );
 
   const { touched, handleBlur } = useFormTouched();
@@ -56,128 +60,37 @@ function RegisterForm() {
     if (!validateFields()) return;
 
     const { passwordConfirm, ...fieldsWithoutPasswordConfirm } = fields;
+    console.log("password ;", fieldsWithoutPasswordConfirm);
 
-    dispatch(register(fieldsWithoutPasswordConfirm))
+    const newPassword = fieldsWithoutPasswordConfirm.password;
+
+    dispatch(resetPassword({ token, newPassword }))
       .unwrap()
       .then(() => {
         setFields({
-          username: "",
-          email: "",
           password: "",
           passwordConfirm: "",
         });
-        toast.success("Registration successful!");
+        toast.success("Password reset successful!");
       })
       .catch((err) => {
         console.error(err);
-        setErrorMessage("Account with this email already exists.");
+        setErrorMessage("Password not reseted.");
         toast.error(err);
       });
-  };
-
-  const handleOAuthLogin = async (profile, provider) => {
-    const userPayload = { profile, provider };
-    try {
-      await dispatch(oAuthlLogInRegister(userPayload)).unwrap();
-      toast.success("Login successful!", { position: "top-center" });
-    } catch (err) {
-      toast.error(`${provider} login failed`);
-      console.error(err);
-    }
-  };
-
-  // callback FB common
-  const onFacebookResponse = (response) => {
-    console.log("FB raw response:", response);
-
-    if (!response) {
-      toast.error("Facebook returned no response");
-      return;
-    }
-
-    if (response.status === "unknown") {
-      toast.error("Facebook login failed or cancelled");
-      return;
-    }
-
-    const accessToken =
-      response.accessToken || response.authResponse?.accessToken || null;
-    const id =
-      response.id || response.userID || response.authResponse?.userID || null;
-    const name = response.name || null;
-    const email = response.email || null;
-    const avatar = response.picture?.data?.url || null;
-
-    const profile = {
-      id,
-      name,
-      email,
-      avatar,
-    };
-
-    // handleOAuthLogin trebuie să accepte accessToken ca al treilea param
-    handleOAuthLogin(profile, "facebook", accessToken);
+    navigate("/auth/login");
   };
 
   const isFormValid =
-    fields.username.trim() !== "" &&
-    fields.email.trim() !== "" &&
-    fields.password.length >= 6 &&
-    fields.password === fields.passwordConfirm;
+    fields.password.length >= 8 && fields.password === fields.passwordConfirm;
 
   return (
     <div className={styles.cont}>
-      <div className={styles.linkContainer}>
-        <p className={styles.login}>Registration</p>
-
-        <Link to="/auth/login" className={styles.navLinkTitle}>
-          Log In
-        </Link>
-      </div>
+      <h1 className={styles.title}>Reset Password</h1>
 
       <div className={styles.form}>
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.inputs}>
-            <div className={styles.inputContainer}>
-              <div className={styles.inputWrapper}>
-                <Input
-                  autoComplete="on"
-                  paddingLeft="18px"
-                  width="100%"
-                  type={"text"}
-                  value={fields.username}
-                  handleChange={(e) => {
-                    setFields({ ...fields, username: e.target.value });
-                  }}
-                  handleBlur={handleBlur("username")}
-                  placeholder="Name"
-                  required={true}
-                />
-              </div>
-              {touched.username && !fields.username && (
-                <p className={styles.inputError}>Required</p>
-              )}
-            </div>
-            <div className={styles.inputContainer}>
-              <div className={styles.inputWrapper}>
-                <Input
-                  autoComplete="on"
-                  paddingLeft="18px"
-                  width="100%"
-                  type="email"
-                  value={fields.email}
-                  handleChange={(e) => {
-                    setFields({ ...fields, email: e.target.value });
-                  }}
-                  handleBlur={handleBlur("email")}
-                  placeholder="E-mail"
-                  required={true}
-                />
-              </div>
-              {touched.email && !fields.email && (
-                <p className={styles.inputError}>Required</p>
-              )}
-            </div>
             <div className={styles.inputContainer}>
               <div className={styles.inputWrapper}>
                 {eyeVisible && (
@@ -287,59 +200,13 @@ function RegisterForm() {
           <div className={styles.buttonsContainer}>
             {errorMessage && <p className={styles.error}>{errorMessage}</p>}
             <Button disabled={!isFormValid} variant="auth" type="submit">
-              Register Now
+              Reset password
             </Button>
           </div>
         </form>
-        <p className={styles.choiceContainer}>
-          <span className={styles.line}></span>
-          <span>or</span>
-          <span className={styles.line}></span>
-        </p>
-        <div className={styles.socialButtonCont}>
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              justifyContent: "center",
-              background: "royalblue",
-              borderRadius: "6px",
-            }}>
-            <GoogleLogin
-              onSuccess={(credentialResponse) => {
-                const profile = jwtDecode(credentialResponse.credential);
-                handleOAuthLogin(
-                  {
-                    id: profile.sub,
-                    name: profile.name,
-                    email: profile.email,
-                    avatar: profile.picture,
-                  },
-                  "google"
-                );
-              }}
-              onError={() => toast.error("Google login failed")}
-              size="large"
-              shape="rectangular"
-              theme="filled_blue"
-              width="100%" // doar ca fallback
-            />
-          </div>
-        </div>
-
-        <div className={styles.socialButtonCont}>
-          <FacebookLogin
-            className={styles.facebookButton}
-            appId={process.env.REACT_APP_FACEBOOK_APP_ID}
-            autoLoad={false}
-            fields="name,email,picture"
-            scope="email,public_profile"
-            callback={onFacebookResponse}
-          />
-        </div>
       </div>
     </div>
   );
 }
 
-export default RegisterForm;
+export default ResetPasswordForm;
