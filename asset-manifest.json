@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Marketing_App/static/css/main.417c89a1.css",
-    "main.js": "/Marketing_App/static/js/main.5e0b2b4a.js",
+    "main.js": "/Marketing_App/static/js/main.decd3924.js",
     "static/css/107.d8d5f676.chunk.css": "/Marketing_App/static/css/107.d8d5f676.chunk.css",
     "static/js/107.a6e780ec.chunk.js": "/Marketing_App/static/js/107.a6e780ec.chunk.js",
     "static/css/548.88f808fa.chunk.css": "/Marketing_App/static/css/548.88f808fa.chunk.css",
@@ -59,7 +59,7 @@
     "static/media/sprite.svg": "/Marketing_App/static/media/sprite.03def203ed4e3f34ffb97b9b53b323e0.svg",
     "index.html": "/Marketing_App/index.html",
     "main.417c89a1.css.map": "/Marketing_App/static/css/main.417c89a1.css.map",
-    "main.5e0b2b4a.js.map": "/Marketing_App/static/js/main.5e0b2b4a.js.map",
+    "main.decd3924.js.map": "/Marketing_App/static/js/main.decd3924.js.map",
     "107.d8d5f676.chunk.css.map": "/Marketing_App/static/css/107.d8d5f676.chunk.css.map",
     "107.a6e780ec.chunk.js.map": "/Marketing_App/static/js/107.a6e780ec.chunk.js.map",
     "548.88f808fa.chunk.css.map": "/Marketing_App/static/css/548.88f808fa.chunk.css.map",
@@ -110,6 +110,6 @@
   },
   "entrypoints": [
     "static/css/main.417c89a1.css",
-    "static/js/main.5e0b2b4a.js"
+    "static/js/main.decd3924.js"
   ]
 }
